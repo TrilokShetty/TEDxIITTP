@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;700;900&display=swap");
+
+/*
+  Logo hierarchy (matches IIT Hyderabad reference exactly):
+
+    TEDx          ← 0.62em  · Jost 900 · red  · SMALLER
+    IITTirupati   ← 1em     · Jost 300 · white · BIG ANCHOR
+    x = indep...  ← 0.3em   · tiny tagline
+
+  The base font-size on .tedxLogo = IITTirupati's size.
+  Everything else is relative to that.
+
+  Navbar override (in Navbar.css):
+    .tedxNavbarLogo .tedxLogo { font-size: clamp(18px, 2.2vw, 26px); }
+*/
+
+.tedxLogo {
+  display:        inline-flex;
+  flex-direction: column;
+  align-items:    flex-start;
+  user-select:    none;
+  line-height:    1;
+  /* standalone fallback — navbar overrides this */
+  font-size:      clamp(18px, 2.5vw, 28px);
+}
+
+/* ── Row 1: TEDx (smaller, sits above) ───────────────────────────── */
+.tedxLogoLine1 {
+  display:     flex;
+  align-items: flex-start;
+  line-height: 1;
+  margin-bottom: 0.12em;
+}
+
+.tedxLogoTed {
+  font-family:    "Jost", sans-serif;
+  font-weight:    900;
+  font-size:      0.9em;         /* smaller than location */
+  color:          #EB0028;
+  letter-spacing: 0em;
+  line-height:    1;
+  text-shadow:
+    0 0 18px rgba(235, 0, 40, 0.55),
+    0 0 42px rgba(235, 0, 40, 0.2);
+}
+
+.tedxLogoX {
+  font-family:  "Jost", sans-serif;
+  font-weight:  900;
+  font-size:    0.5em;            /* superscript x */
+  color:        #EB0028;
+  line-height:  1;
+  align-self:   flex-start;
+  margin-top:   0.05em;
+  text-shadow:  0 0 12px rgba(235, 0, 40, 0.5);
+}
+
+/* ── Row 2: IITTirupati (the BIG dominant anchor) ────────────────── */
+.tedxLogoLocation {
+  font-family:    "Jost", sans-serif;
+  font-weight:    400;
+  font-size:      1em;            /* full base size — this is the anchor */
+  color:          rgba(255, 255, 255, 0.96);
+  letter-spacing: 0.01em;
+  line-height:    1;
+}
+
+/* ── Row 3: Tagline ──────────────────────────────────────────────── */
+.tedxLogoTagline {
+  display:     flex;
+  align-items: baseline;
+  gap:         0.2em;
+  margin-top:  0.3em;
+}
+
+.tedxLogoTaglineX {
+  font-family: "Jost", sans-serif;
+  font-weight: 700;
+  font-size:   0.4em;
+  color:       #EB0028;
+  line-height: 1;
+}
+
+.tedxLogoTaglineText {
+  font-family:    "Jost", sans-serif;
+  font-weight:    300;
+  font-size:      0.35em;
+  color:          rgb(255, 255, 255);
+  letter-spacing: 0.04em;
+  line-height:    1;
+  white-space:    nowrap;
+}

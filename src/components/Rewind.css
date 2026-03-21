@@ -1,0 +1,451 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0a0a0a;
+  --red: #eb0028;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --white: #f5f0e8;
+  --grey: #666;
+  --border: rgba(201, 168, 76, 0.2);
+}
+
+/* ── SLIM PAGE HEADER ─────────────────────────────────────────────────────── */
+.rewind-page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 36px 48px 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rewind-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.rewind-label-red {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.rewind-label-white {
+  color: var(--white);
+  font-weight: 400;
+}
+
+.rewind-slash {
+  color: var(--border);
+  font-weight: 300;
+  padding: 0 4px;
+}
+
+.rewind-label-page {
+  color: var(--grey);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.rewind-header-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 300;
+  opacity: 0.75;
+}
+
+/* ── TIMELINE ─────────────────────────────────────────────────────────────── */
+.timeline {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px 100px;
+}
+
+/* ── YEAR BLOCK ───────────────────────────────────────────────────────────── */
+.year-block {
+  border-top: 1px solid var(--border);
+  padding-bottom: 48px;
+}
+
+.year-block:last-of-type {
+  border-bottom: none;
+}
+
+.year-header {
+  display: flex;
+  align-items: center;
+  padding: 32px 0 24px;
+  gap: 24px;
+}
+
+.year-left {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+}
+
+.year-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.year-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.year-edition-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: #aaa;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.year-theme {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2.2vw, 24px);
+  font-style: italic;
+  color: var(--white);
+  font-weight: 300;
+}
+
+/* ── SPEAKERS PANEL — always visible ─────────────────────────────────────── */
+.speakers-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 3px;
+}
+
+/* ── SPEAKER CARD ─────────────────────────────────────────────────────────── */
+.speaker-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0e0e0e;
+}
+
+/* Red left bar on hover */
+.speaker-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--red);
+  z-index: 3;
+  transition: height 0.4s ease;
+}
+
+.speaker-card:hover::before {
+  height: 100%;
+}
+
+.card-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: grayscale(50%) brightness(0.7);
+  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.speaker-card:hover .card-photo {
+  filter: grayscale(0%) brightness(0.82);
+  transform: scale(1.04);
+}
+
+.card-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0e0e0e;
+}
+
+.card-initials span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 8vw, 80px);
+  font-weight: 300;
+  color: rgba(201, 168, 76, 0.1);
+  user-select: none;
+}
+
+/* Name strip at bottom */
+.card-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 36px 14px 14px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.97) 0%,
+    rgba(0, 0, 0, 0.55) 65%,
+    transparent 100%
+  );
+  z-index: 2;
+}
+
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.card-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* "tap to read more" hint — always faintly visible */
+.card-hint {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0.55;
+  transition: opacity 0.3s;
+  z-index: 4;
+}
+
+.speaker-card:hover .card-hint {
+  opacity: 1;
+}
+
+/* ── BIO MODAL ────────────────────────────────────────────────────────────── */
+.bio-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: backdropIn 0.25s ease;
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.bio-modal {
+  position: relative;
+  background: #111;
+  border: 1px solid var(--border);
+  max-width: 820px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.bio-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--grey);
+  font-size: 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.bio-modal-close:hover {
+  color: var(--white);
+}
+
+.bio-modal-inner {
+  display: flex;
+  height: 100%;
+  min-height: 400px;
+}
+
+/* Left photo column */
+.bio-modal-photo-wrap {
+  width: 280px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.bio-modal-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: grayscale(20%) brightness(0.85);
+}
+
+.bio-modal-initials {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0e0e0e;
+}
+
+.bio-modal-initials span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 96px;
+  font-weight: 300;
+  color: rgba(201, 168, 76, 0.12);
+}
+
+/* Right text column */
+.bio-modal-text-wrap {
+  flex: 1;
+  padding: 48px 40px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.bio-modal-text-wrap::-webkit-scrollbar { width: 2px; }
+.bio-modal-text-wrap::-webkit-scrollbar-track { background: transparent; }
+.bio-modal-text-wrap::-webkit-scrollbar-thumb { background: var(--gold); }
+
+.bio-modal-red-line {
+  width: 32px;
+  height: 2px;
+  background: var(--red);
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.bio-modal-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.bio-modal-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 28px;
+}
+
+.bio-modal-bio {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(245, 240, 232, 0.72);
+  font-weight: 300;
+}
+
+/* ── FUTURE TEASER ────────────────────────────────────────────────────────── */
+.future-teaser {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 48px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.future-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border));
+}
+
+.future-line:last-child {
+  background: linear-gradient(to left, transparent, var(--border));
+}
+
+.future-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+  opacity: 0.75;
+  font-weight: 300;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .rewind-page-header {
+    padding: 24px 20px 20px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .timeline {
+    padding: 0 20px 80px;
+  }
+
+  .year-left {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .speakers-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bio-modal-inner {
+    flex-direction: column;
+  }
+
+  .bio-modal-photo-wrap {
+    width: 100%;
+    height: 240px;
+  }
+
+  .bio-modal-text-wrap {
+    padding: 28px 24px 32px;
+  }
+}

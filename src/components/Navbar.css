@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;700;900&display=swap");
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOKENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  --nav-red:             #EB0028;
+  --nav-text:            rgba(245, 243, 238, 0.85);
+  --nav-text-hover:      #ffffff;
+  --nav-bg:              rgba(5, 4, 2, 0.82);
+  --nav-bg-scrolled:     rgba(5, 4, 2, 0.97);
+  --nav-border:          rgba(255, 255, 255, 0.055);
+  --nav-border-scrolled: rgba(235, 0, 40, 0.15);
+  --nav-height:          88px;
+  --nav-height-scrolled: 72px;
+  --nav-link-size:       17px;
+  --nav-padding-x:       56px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   KEYFRAMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes navDrop {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes menuSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NAVBAR SHELL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxNavbar {
+  position:                fixed;
+  top: 0; left: 0; right: 0;
+  z-index:                 200;
+  display:                 flex;
+  align-items:             center;
+  height:                  var(--nav-height);
+  padding:                 0 var(--nav-padding-x);
+  background:              var(--nav-bg);
+  backdrop-filter:         blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom:           1px solid var(--nav-border);
+  animation:               navDrop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition:
+    height       0.32s ease,
+    background   0.38s ease,
+    border-color 0.38s ease,
+    box-shadow   0.38s ease;
+}
+
+.tedxNavbar.isScrolled {
+  height:       var(--nav-height-scrolled);
+  background:   var(--nav-bg-scrolled);
+  border-color: var(--nav-border-scrolled);
+  box-shadow:   0 2px 40px rgba(0, 0, 0, 0.65);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LOGO ZONE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxNavbarLogo {
+  flex-shrink: 0;
+  cursor:      pointer;
+  display:     flex;
+  align-items: center;
+}
+
+.tedxNavbarLogo .tedxLogo {
+  font-size: clamp(18px, 2.2vw, 26px);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CENTER LINKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxNavbarCenter {
+  position:    absolute;
+  left:        50%;
+  transform:   translateX(-50%);
+  display:     flex;
+  align-items: center;
+  gap:         36px;
+}
+
+.tedxNavLink {
+  position:        relative;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             7px;
+  color:           var(--nav-text);
+  text-decoration: none;
+  font-family:     "Jost", sans-serif;
+  font-weight:     400;
+  font-size:       var(--nav-link-size);
+  letter-spacing:  0.04em;
+  white-space:     nowrap;
+  cursor:          pointer;
+  padding-bottom:  2px;
+  transition:      color 0.25s ease;
+}
+
+.tedxNavLink::after {
+  content:    "";
+  position:   absolute;
+  bottom:     -1px;
+  left:       0;
+  width:      0;
+  height:     1px;
+  background: var(--nav-red);
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tedxNavLink:hover {
+  color: var(--nav-text-hover);
+}
+
+.tedxNavLink:hover::after {
+  width: 100%;
+}
+
+.tedxNavLinkIcon {
+  font-size:   16px;
+  line-height: 1;
+  color:       rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+  display:     inline-flex;
+  align-items: center;
+  transition:  color 0.25s ease, transform 0.3s ease;
+}
+
+.tedxNavLink:hover .tedxNavLinkIcon {
+  color:     rgba(255, 255, 255, 0.95);
+  transform: rotate(18deg) scale(1.15);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RIGHT — CONTACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxNavbarRight {
+  margin-left: auto;
+  display:     flex;
+  align-items: center;
+}
+
+.tedxNavContact {
+  position:        relative;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             7px;
+  color:           var(--nav-text);
+  text-decoration: none;
+  font-family:     "Jost", sans-serif;
+  font-weight:     400;
+  font-size:       var(--nav-link-size);
+  letter-spacing:  0.04em;
+  white-space:     nowrap;
+  padding-bottom:  2px;
+  transition:      color 0.25s ease;
+}
+
+.tedxNavContact::after {
+  content:    "";
+  position:   absolute;
+  bottom:     -1px;
+  left:       0;
+  width:      0;
+  height:     1px;
+  background: var(--nav-red);
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tedxNavContact:hover {
+  color: var(--nav-text-hover);
+}
+
+.tedxNavContact:hover::after {
+  width: 100%;
+}
+
+.tedxNavContactIcon {
+  font-size:   16px;
+  line-height: 1;
+  color:       rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+  display:     inline-flex;
+  align-items: center;
+  transition:  color 0.25s ease, transform 0.3s ease;
+}
+
+.tedxNavContact:hover .tedxNavContactIcon {
+  color:     rgba(255, 255, 255, 0.95);
+  transform: scale(1.15);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE BURGER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxNavBurger {
+  display:         none;
+  margin-left:     auto;
+  background:      none;
+  border:          none;
+  cursor:          pointer;
+  color:           rgba(255, 255, 255, 0.85);
+  font-size:       22px;
+  padding:         4px 2px;
+  line-height:     1;
+  align-items:     center;
+  justify-content: center;
+  transition:      color 0.2s ease;
+}
+
+.tedxNavBurger:hover { color: #fff; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE DROPDOWN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tedxMobileMenu {
+  position:       fixed;
+  top:            var(--nav-height);
+  left: 0; right: 0;
+  z-index:        199;
+  background:     rgba(5, 4, 2, 0.98);
+  border-bottom:  1px solid rgba(235, 0, 40, 0.12);
+  padding:        16px 28px 22px;
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  animation:      menuSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tedxMobileMenu a {
+  display:         flex;
+  align-items:     center;
+  gap:             12px;
+  color:           var(--nav-text);
+  text-decoration: none;
+  font-family:     "Jost", sans-serif;
+  font-weight:     400;
+  font-size:       16px;
+  letter-spacing:  0.04em;
+  padding:         12px 6px;
+  border-bottom:   1px solid rgba(255, 255, 255, 0.05);
+  transition:      color 0.2s ease, padding-left 0.2s ease;
+}
+
+.tedxMobileMenu a:last-child { border-bottom: none; }
+.tedxMobileMenu a:hover      { color: #fff; padding-left: 14px; }
+
+.tedxMobileMenuIcon {
+  font-size:   14px;
+  line-height: 1;
+  color:       rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+  display:     inline-flex;
+  align-items: center;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 1100px) {
+  :root { --nav-padding-x: 36px; }
+  .tedxNavbarCenter { gap: 26px; }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-link-size: 15.5px;
+    --nav-padding-x: 24px;
+  }
+  .tedxNavbarCenter { gap: 18px; }
+  .tedxNavbarLogo .tedxLogo { font-size: clamp(15px, 2vw, 20px); }
+}
+
+@media (max-width: 768px) {
+  .tedxNavbarCenter { display: none; }
+  .tedxNavbarRight  { display: none; }
+  .tedxNavBurger    { display: inline-flex; }
+  .tedxNavbarLogo .tedxLogo { font-size: 18px; }
+}
+
+@media (max-width: 400px) {
+  .tedxNavbarLogo .tedxLogo { font-size: 15px; }
+}

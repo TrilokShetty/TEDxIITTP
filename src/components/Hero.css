@@ -1,0 +1,40 @@
+/* Ticket button responsiveness */
+.tedxTicketWrap {
+  position: relative;
+  display: inline-block;
+  padding: 6px;
+  max-width: min(92vw, 520px);
+}
+
+.tedxTicketBtn {
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-family: "Jost", sans-serif;
+  font-weight: 400;
+  font-size: clamp(12px, 1.6vw, 13.5px);
+  letter-spacing: clamp(1.6px, 0.55vw, 2.5px);
+  padding: clamp(14px, 2.2vw, 17px) clamp(22px, 6vw, 58px);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: color 0.3s ease, letter-spacing 0.3s ease, border-color 0.3s ease;
+  display: block;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.tedxTicketWrap.isHover .tedxTicketBtn {
+  border-color: rgba(212, 160, 23, 0.6);
+  color: #D4A017;
+  letter-spacing: clamp(2.4px, 0.75vw, 3.5px);
+}
+
+@media (max-width: 380px) {
+  .tedxTicketBtn {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
