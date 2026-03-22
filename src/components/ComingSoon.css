@@ -2,11 +2,9 @@
 
 :root {
   --ted-red:   #eb0028;
-  --gold:      #c9a55a;
-  --gold-dim:  #9a7c42;
   --white:     #f5f5f0;
   --white-dim: #a8a8a0;
-  --border:    rgba(201, 165, 90, 0.25);
+  --border:    var(--gold-border);
 
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-caps:    'Cinzel', serif;
@@ -35,7 +33,7 @@
   inset: 0;
   background: radial-gradient(ellipse 60% 55% at 50% 50%,
     rgba(235, 0, 40, 0.04) 0%,
-    rgba(201, 165, 90, 0.03) 40%,
+    rgba(201, 169, 110, 0.03) 40%,
     transparent 70%
   );
   pointer-events: none;

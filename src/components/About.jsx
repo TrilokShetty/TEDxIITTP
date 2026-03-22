@@ -22,7 +22,7 @@ function WaveSVG() {
         <path key={i}
           d={`M0,${40 + i * 6} C360,${15 + i * 5} 720,${65 + i * 4} 1080,${28 + i * 6} C1260,${12 + i * 4} 1380,${55 + i * 3} 1440,${38 + i * 5}`}
           fill="none"
-          stroke={i % 2 === 0 ? '#eb0028' : '#c9a96e'}
+          stroke={i % 2 === 0 ? '#eb0028' : 'var(--gold)'}
           strokeWidth="0.9"
           opacity={0.55 - i * 0.08}
         />

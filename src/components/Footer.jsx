@@ -11,11 +11,11 @@ const OrnDivider = () => (
     xmlns="http://www.w3.org/2000/svg"
     style={{ display: "block", margin: "0 auto" }}
   >
-    <line x1="0" y1="9" x2="132" y2="9" stroke="rgba(201,168,50,0.25)" strokeWidth="0.8" />
-    <polygon points="140,9 147,4 154,9 147,14" fill="none" stroke="rgba(201,168,50,0.55)" strokeWidth="0.8" />
-    <circle cx="160" cy="9" r="2.5" fill="#C9A832" opacity="0.9" />
-    <polygon points="166,9 173,4 180,9 173,14" fill="none" stroke="rgba(201,168,50,0.55)" strokeWidth="0.8" />
-    <line x1="188" y1="9" x2="320" y2="9" stroke="rgba(201,168,50,0.25)" strokeWidth="0.8" />
+    <line x1="0" y1="9" x2="132" y2="9" stroke="var(--gold-dim)" strokeWidth="0.8" />
+    <polygon points="140,9 147,4 154,9 147,14" fill="none" stroke="var(--gold-dim)" strokeWidth="0.8" />
+    <circle cx="160" cy="9" r="2.5" fill="var(--gold)" opacity="0.9" />
+    <polygon points="166,9 173,4 180,9 173,14" fill="none" stroke="var(--gold-dim)" strokeWidth="0.8" />
+    <line x1="188" y1="9" x2="320" y2="9" stroke="var(--gold-dim)" strokeWidth="0.8" />
   </svg>
 );
 
@@ -32,9 +32,9 @@ const CornerOrnament = ({ pos }) => {
       width="18" height="18" viewBox="0 0 18 18"
       style={{ position: "absolute", ...styles[pos], opacity: 0.55 }}
     >
-      <line x1="9" y1="0" x2="9" y2="9" stroke="#C9A832" strokeWidth="0.8" />
-      <line x1="0" y1="9" x2="9" y2="9" stroke="#C9A832" strokeWidth="0.8" />
-      <circle cx="9" cy="9" r="1.5" fill="#C9A832" />
+      <line x1="9" y1="0" x2="9" y2="9" stroke="var(--gold)" strokeWidth="0.8" />
+      <line x1="0" y1="9" x2="9" y2="9" stroke="var(--gold)" strokeWidth="0.8" />
+      <circle cx="9" cy="9" r="1.5" fill="var(--gold)" />
     </svg>
   );
 };
@@ -84,7 +84,7 @@ const Footer = () => {
     <footer id = "footer"
       style={{
         background: "#050503",
-        borderTop: "1px solid rgba(201,168,50,0.12)",
+        borderTop: "1px solid var(--gold-border)",
         padding: "72px 0 0",
         fontFamily: "'Jost', sans-serif",
         position: "relative",
@@ -130,7 +130,7 @@ const Footer = () => {
           margin-bottom: 16px;
         }
         .ftx-info-icon {
-          color: rgba(201,168,50,0.9);
+          color: var(--gold);
           flex-shrink: 0;
           margin-top: 2px;
         }
@@ -146,7 +146,7 @@ const Footer = () => {
           text-decoration: none;
           transition: color 0.2s;
         }
-        .ftx-info-text a:hover { color: #C9A832; }
+        .ftx-info-text a:hover { color: var(--gold); }
 
         /* Nav links */
         .ftx-nav-list {
@@ -176,12 +176,12 @@ const Footer = () => {
           display: block;
           width: 0;
           height: 1px;
-          background: #C9A832;
+          background: var(--gold);
           transition: width 0.25s;
           flex-shrink: 0;
         }
         .ftx-nav-list li a:hover {
-          color: #C9A832;
+          color: var(--gold);
           gap: 12px;
         }
         .ftx-nav-list li a:hover::before {
@@ -194,7 +194,7 @@ const Footer = () => {
           font-weight: 400;
           letter-spacing: 4px;
           text-transform: uppercase;
-          color: rgba(201,168,50,0.95);
+          color: var(--gold);
           margin: 0 0 24px;
           display: flex;
           align-items: center;
@@ -205,7 +205,7 @@ const Footer = () => {
           flex: 1;
           max-width: 40px;
           height: 1px;
-          background: rgba(201,168,50,0.3);
+          background: var(--gold-border);
         }
 
         /* Social pills */
@@ -221,7 +221,7 @@ const Footer = () => {
           justify-content: center;
           width: 36px;
           height: 36px;
-          border: 1px solid rgba(201,168,50,0.25);
+          border: 1px solid var(--gold-border);
           background: transparent;
           cursor: pointer;
           color: rgba(255,255,255,0.65);
@@ -230,14 +230,14 @@ const Footer = () => {
           position: relative;
         }
         .ftx-social-btn:hover {
-          color: #C9A832;
-          border-color: rgba(201,168,50,0.7);
-          background: rgba(201,168,50,0.06);
+          color: var(--gold);
+          border-color: var(--gold-dim);
+          background: var(--gold-glow);
         }
 
         /* bottom bar */
         .ftx-bottom {
-          border-top: 1px solid rgba(201,168,50,0.1);
+          border-top: 1px solid var(--gold-border);
           padding: 22px 32px;
           max-width: 1100px;
           margin: 0 auto;
@@ -258,7 +258,7 @@ const Footer = () => {
           font-size: 10px;
           letter-spacing: 2px;
           text-transform: uppercase;
-          color: rgba(201,168,50,0.75);
+          color: var(--gold-bright);
           font-weight: 400;
         }
 
@@ -270,7 +270,7 @@ const Footer = () => {
           transform: translateX(-50%);
           width: 500px;
           height: 180px;
-          background: radial-gradient(ellipse at 50% 100%, rgba(201,168,50,0.07) 0%, transparent 70%);
+          background: radial-gradient(ellipse at 50% 100%, var(--gold-glow) 0%, transparent 70%);
           pointer-events: none;
         }
       `}</style>
@@ -335,7 +335,7 @@ const Footer = () => {
               fontStyle: "italic",
               fontWeight: 300,
               fontSize: "17px",
-              color: "rgba(201,168,50,0.88)",
+              color: "var(--gold)",
               letterSpacing: "1px",
               lineHeight: 1.4,
               margin: "0 0 32px",
@@ -439,7 +439,7 @@ const Footer = () => {
               style={{
                 marginTop: "36px",
                 padding: "18px",
-                border: "1px solid rgba(201,168,50,0.15)",
+                border: "1px solid var(--gold-border)",
                 position: "relative",
               }}
             >
@@ -465,7 +465,7 @@ const Footer = () => {
       </div>
 
       {/* ── Bottom bar ── */}
-      <div style={{ borderTop: "1px solid rgba(201,168,50,0.10)", marginTop: "0" }}>
+      <div style={{ borderTop: "1px solid var(--gold-border)", marginTop: "0" }}>
         <div className="ftx-bottom">
           <span className="ftx-bottom-text">
             © {new Date().getFullYear()} TEDxIITTirupati. All rights reserved.

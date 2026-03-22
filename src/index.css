@@ -1,5 +1,12 @@
 :root {
   color-scheme: dark;
+
+  /* ── Unified Gold Palette ── */
+  --gold:         #D4AF37;           /* Metallic Gold - brighter and warmer */
+  --gold-bright:  #F2C94C;           /* Vibrant Accent Gold */
+  --gold-dim:     rgba(212, 175, 55, 0.5);   /* Increased from 0.4 */
+  --gold-border:  rgba(212, 175, 55, 0.25);  /* Increased from 0.2 */
+  --gold-glow:    rgba(212, 175, 55, 0.12);  /* Increased from 0.05 */
 }
 
 html,

@@ -27,8 +27,8 @@
 }
 
 .tedxTicketWrap.isHover .tedxTicketBtn {
-  border-color: rgba(212, 160, 23, 0.6);
-  color: #D4A017;
+  border-color: rgba(212, 175, 55, 0.7); /* Matching original 0.6-0.7 weight but with new gold */
+  color: var(--gold);
   letter-spacing: clamp(2.4px, 0.75vw, 3.5px);
 }
 

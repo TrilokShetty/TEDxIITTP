@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Timer from "./Timer";
 
 import "./Hero.css";
 
@@ -24,12 +25,12 @@ const TicketButton = ({ onClick }) => {
       }}
     >
       <line x1="7" y1="7" x2="14" y2="7"
-        stroke={hov ? "#D4A017" : "rgba(212,160,23,0.75)"} strokeWidth="1" />
+        stroke={hov ? "var(--gold)" : "var(--gold)"} strokeWidth="1" />
       <line x1="7" y1="7" x2="7" y2="14"
-        stroke={hov ? "#D4A017" : "rgba(212,160,23,0.75)"} strokeWidth="1" />
+        stroke={hov ? "var(--gold)" : "var(--gold)"} strokeWidth="1" />
       <rect x="5" y="5" width="4" height="4"
         transform="rotate(45 7 7)"
-        fill={hov ? "#D4A017" : "rgba(212,160,23,0.65)"}
+        fill={hov ? "var(--gold)" : "var(--gold)"}
         stroke="none"
       />
     </svg>
@@ -307,6 +308,7 @@ const Hero = () => {
         .hero-line-3 { animation: heroFadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.65s both; }
         .hero-line-4 { animation: heroFadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.85s both; }
         .hero-line-5 { animation: heroFadeUp 1s cubic-bezier(0.16,1,0.3,1) 1.05s both; }
+        .hero-line-6 { animation: heroFadeUp 1s cubic-bezier(0.16,1,0.3,1) 1.25s both; }
       `}</style>
 
 
@@ -352,6 +354,7 @@ const Hero = () => {
           textAlign: "center",
           padding: "0 24px",
           maxWidth: "900px",
+          marginTop: "64px", /* Shifts the content down slightly away from the navbar */
           opacity: ready ? 1 : 0,
           transition: "opacity 0.3s",
         }}
@@ -370,8 +373,8 @@ const Hero = () => {
           }}
         >
           <span style={{ color: "#EE2922", fontWeight: 700, fontFamily: '"Arial Black", Arial, sans-serif', letterSpacing: "-0.5px" }}>TED</span>
-          <sup style={{ color: "#EE2922", fontSize: "10px", fontFamily: '"Arial Black", Arial, sans-serif', fontWeight: 500 }}>x</sup>
-          <span style={{ color: "rgba(255,255,255,0.85)", marginLeft: "4px", letterSpacing: "4px" }}>IITTirupati</span>
+          <sup style={{ color: "#EE2922", fontSize: "11px", fontFamily: '"Arial Black", Arial, sans-serif', fontWeight: 700 }}>x</sup>
+          <span style={{ color: "rgba(255,255,255,0.85)", marginLeft: "4px", letterSpacing: "3px" , fontWeight: 600}}>IITTirupati</span>
         </div>
 
         {/* Main title */}
@@ -398,7 +401,7 @@ const Hero = () => {
             fontWeight: 400,
             fontStyle: "italic",
             fontSize: "clamp(22px, 3.5vw, 48px)",
-            color: "#C9A832",
+            color: "var(--gold)",
             lineHeight: 1.1,
             margin: "0 0 28px",
             letterSpacing: "5px",
@@ -418,9 +421,9 @@ const Hero = () => {
             marginBottom: "28px",
           }}
         >
-          <div style={{ width: "40px", height: "1px", background: "rgba(201,168,50,0.35)" }} />
-          <span style={{ color: "rgba(201,168,50,0.55)", fontSize: "8px", letterSpacing: "4px" }}>✦</span>
-          <div style={{ width: "40px", height: "1px", background: "rgba(201,168,50,0.35)" }} />
+          <div style={{ width: "40px", height: "1px", background: "var(--gold-border)" }} />
+          <span style={{ color: "var(--gold-dim)", fontSize: "8px", letterSpacing: "4px" }}>✦</span>
+          <div style={{ width: "40px", height: "1px", background: "var(--gold-border)" }} />
         </div>
 
         {/* Tagline */}
@@ -439,8 +442,13 @@ const Hero = () => {
           Ideas Worth Spreading
         </p>
 
-        {/* CTA */}
+        {/* Timer */}
         <div className="hero-line-5">
+          <Timer />
+        </div>
+
+        {/* CTA */}
+        <div className="hero-line-6">
           <TicketButton onClick={() => navigate("/tickets")} />
         </div>
       </div>
@@ -465,11 +473,11 @@ const Hero = () => {
             width: "36px",
             height: "36px",
             borderRadius: "50%",
-            border: "1px solid rgba(201,168,50,0.35)",
+            border: "1px solid var(--gold-border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "rgba(201,168,50,0.6)",
+            color: "var(--gold-dim)",
             fontSize: "16px",
             animation: "scrollBounce 2.2s ease-in-out infinite, pulseRing 2.2s ease-in-out infinite",
           }}

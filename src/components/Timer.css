@@ -1,0 +1,78 @@
+/* Timer.css */
+.timer-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 42px; /* space before the button */
+}
+
+.timer-announcement {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-variant-numeric: lining-nums; /* Forces numbers to be the same height instead of old-style text figures */
+  font-size: clamp(20px, 3vw, 26px);
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin: 0 0 16px;
+}
+
+.timer-boxes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timer-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+
+.timer-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 300;
+  color: #f0ece4;
+  line-height: 1;
+}
+
+.timer-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(8px, 1.2vw, 10px);
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-top: 8px;
+}
+
+.timer-separator {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.2);
+  margin-top: -18px; /* visually align with the numbers, ignoring the label */
+}
+
+@media (max-width: 480px) {
+  .timer-boxes {
+    gap: 8px;
+  }
+  .timer-box {
+    min-width: 50px;
+  }
+  .timer-value {
+    font-size: 24px;
+  }
+  .timer-label {
+    font-size: 8px;
+  }
+  .timer-separator {
+    font-size: 20px;
+    margin-top: -14px;
+  }
+}

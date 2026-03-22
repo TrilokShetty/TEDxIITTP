@@ -19,7 +19,7 @@
   padding: 5rem 2rem 4.5rem;
   text-align: center;
   overflow: hidden;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.18);
+  border-bottom: 1px solid var(--gold-border);
 }
 
 .pp-header__bg {
@@ -42,7 +42,7 @@
   font-size: 0.58rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--gold);
   font-weight: 500;
   margin-bottom: 1.2rem;
   opacity: 0;
@@ -61,7 +61,7 @@
 
 .pp-title em {
   font-style: italic;
-  color: #e2c48a;
+  color: var(--gold-bright);
 }
 
 .pp-rule {
@@ -77,18 +77,18 @@
 .pp-rule span {
   width: 52px;
   height: 1px;
-  background: linear-gradient(to right, transparent, #c9a96e);
+  background: linear-gradient(to right, transparent, var(--gold));
 }
 
 .pp-rule span:last-child {
-  background: linear-gradient(to left, transparent, #c9a96e);
+  background: linear-gradient(to left, transparent, var(--gold));
 }
 
 .pp-rule i {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #c9a96e;
+  background: var(--gold);
   font-style: normal;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .pp-intro {
-  border-left: 2px solid rgba(201, 169, 110, 0.4);
+  border-left: 2px solid var(--gold-dim);
   padding-left: 2rem;
   max-width: 720px;
 }
@@ -137,7 +137,7 @@
 
 .pp-section__divider {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.18), transparent);
+  background: linear-gradient(to right, transparent, var(--gold-border), transparent);
   margin-bottom: 3.2rem;
 }
 
@@ -156,7 +156,7 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--gold);
   border: 1px solid rgba(201, 169, 110, 0.35);
   padding: 0.3rem 0.8rem;
   margin-bottom: 1.1rem;
@@ -188,7 +188,7 @@
   text-align: center;
   padding: 7rem 2.5rem 8rem;
   overflow: hidden;
-  border-top: 1px solid rgba(201, 169, 110, 0.18);
+  border-top: 1px solid var(--gold-border);
 }
 
 .pp-contact__glow {
@@ -216,7 +216,7 @@
 
 .pp-contact__heading em {
   font-style: italic;
-  color: #e2c48a;
+  color: var(--gold-bright);
 }
 
 .pp-contact__body {
@@ -243,7 +243,7 @@
   gap: 8px;
   font-size: 0.88rem;
   font-weight: 400;
-  color: #e2c48a;
+  color: var(--gold-bright);
   text-decoration: none;
   letter-spacing: 0.04em;
   border-bottom: 1px solid rgba(201, 169, 110, 0.3);

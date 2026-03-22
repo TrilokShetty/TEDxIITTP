@@ -3,11 +3,9 @@
 :root {
   --black: #0a0a0a;
   --red: #eb0028;
-  --gold: #c9a84c;
-  --gold-light: #e8c97a;
   --white: #f5f0e8;
   --grey: #666;
-  --border: rgba(201, 168, 76, 0.2);
+  --border: var(--gold-border);
 }
 
 /* ─── Header ─────────────────────────────────────────────────── */
@@ -16,7 +14,7 @@
   padding: 5rem 2rem 4.5rem;
   text-align: center;
   overflow: hidden;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.18);
+  border-bottom: 1px solid var(--gold-border);
   margin-top: 88px; /* Fixed navbar offset since rewind page had none explicitly applied to the wrapper */
 }
 
@@ -40,7 +38,7 @@
   font-size: 0.58rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--gold);
   font-weight: 500;
   margin-bottom: 1.2rem;
   opacity: 0;
@@ -60,7 +58,7 @@
 
 .rew-title em {
   font-style: italic;
-  color: #e2c48a;
+  color: var(--gold-bright);
 }
 
 .rew-rule {
@@ -76,18 +74,18 @@
 .rew-rule span {
   width: 52px;
   height: 1px;
-  background: linear-gradient(to right, transparent, #c9a96e);
+  background: linear-gradient(to right, transparent, var(--gold));
 }
 
 .rew-rule span:last-child {
-  background: linear-gradient(to left, transparent, #c9a96e);
+  background: linear-gradient(to left, transparent, var(--gold));
 }
 
 .rew-rule i {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #c9a96e;
+  background: var(--gold);
   font-style: normal;
 }
 
@@ -227,7 +225,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(52px, 8vw, 80px);
   font-weight: 300;
-  color: rgba(201, 168, 76, 0.1);
+  color: var(--gold-border); /* using a border-like opacity color here */
   user-select: none;
 }
 
@@ -376,7 +374,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 96px;
   font-weight: 300;
-  color: rgba(201, 168, 76, 0.12);
+  color: var(--gold-border); /* using a border-like opacity color here */
 }
 
 /* Right text column */
