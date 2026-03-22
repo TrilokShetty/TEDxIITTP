@@ -4,6 +4,19 @@ import { useMemo, useState } from "react";
 import { useLocation, BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 
+import TedxLogo from "./components/TedxLogo";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Footer from "./components/Footer";
+import ComingSoon from "./components/ComingSoon";
+import Rewind from "./components/Rewind";
+import Tickets from "./components/Tickets";
+import About from "./components/About";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsAndConditions from "./components/TnC";
+
+import "./App.css";
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -15,15 +28,7 @@ function ScrollToTop() {
   return null;
 }
 
-import TedxLogo from "./components/TedxLogo";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Footer from "./components/Footer";
-import ComingSoon from "./components/ComingSoon";
-import Rewind from "./components/Rewind";
-import Tickets from "./components/Tickets";
 
-import "./App.css";
 
 gsap.registerPlugin(Observer);
 
@@ -59,7 +64,9 @@ const AnimatedSections = () => {
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/rewind" element={<Rewind />} />
             <Route path="/tickets" element={<Tickets />} />
-
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           </Routes>
 
           {/* Footer always visible */}

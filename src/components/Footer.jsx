@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 /* ─── Ornamental divider SVG ─────────────────────────────────────────────── */
 const OrnDivider = () => (
@@ -404,8 +405,17 @@ const Footer = () => {
           <div>
             <p className="ftx-section-label">Navigate</p>
             <ul className="ftx-nav-list">
-              {["Home", "About", "Speakers", "Sponsors", "Team", "Rewind"].map((l) => (
-                <li key={l}><a href="#">{l}</a></li>
+              {[
+                { label: "Home", href: "/" },
+                { label: "About", href: "/about" },
+                { label: "Speakers", href: "/coming-soon" },
+                { label: "Sponsors", href: "/coming-soon" },
+                { label: "Team", href: "/coming-soon" },
+                { label: "Rewind", href: "/rewind" },
+              ].map((l) => (
+                <li key={l.label}>
+                  <Link to={l.href}>{l.label}</Link>
+                </li>
               ))}
             </ul>
           </div>
@@ -414,8 +424,13 @@ const Footer = () => {
           <div>
             <p className="ftx-section-label">Legal</p>
             <ul className="ftx-nav-list">
-              {["Privacy Policy", "Terms & Conditions"].map((l) => (
-                <li key={l}><a href="#">{l}</a></li>
+              {[
+                { label: "Privacy Policy", href: "/privacy-policy" },
+                { label: "Terms & Conditions", href: "/terms-and-conditions" },
+              ].map((l) => (
+                <li key={l.label}>
+                  <Link to={l.href}>{l.label}</Link>
+                </li>
               ))}
             </ul>
 

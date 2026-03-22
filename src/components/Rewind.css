@@ -10,57 +10,100 @@
   --border: rgba(201, 168, 76, 0.2);
 }
 
-/* ── SLIM PAGE HEADER ─────────────────────────────────────────────────────── */
-.rewind-page-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 36px 48px 28px;
-  border-bottom: 1px solid var(--border);
+/* ─── Header ─────────────────────────────────────────────────── */
+.rew-header {
+  position: relative;
+  padding: 5rem 2rem 4.5rem;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.18);
+  margin-top: 88px; /* Fixed navbar offset since rewind page had none explicitly applied to the wrapper */
 }
 
-.rewind-header-left {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+.rew-header__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 85% 65% at 50% 110%, rgba(122, 0, 20, 0.5) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 85% 0%,   rgba(201, 169, 110, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.rew-header__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.rew-eyebrow {
+  display: inline-block;
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.05em;
-}
-
-.rewind-label-red {
-  color: var(--red);
-  font-weight: 600;
-}
-
-.rewind-label-white {
-  color: var(--white);
-  font-weight: 400;
-}
-
-.rewind-slash {
-  color: var(--border);
-  font-weight: 300;
-  padding: 0 4px;
-}
-
-.rewind-label-page {
-  color: var(--grey);
-  font-weight: 300;
-  letter-spacing: 0.2em;
+  font-size: 0.58rem;
+  letter-spacing: 0.38em;
   text-transform: uppercase;
-  font-size: 10px;
+  color: #c9a96e;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: rew-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
 }
 
-.rewind-header-sub {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px;
-  font-style: italic;
-  color: var(--gold);
+.rew-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3rem, 7.5vw, 6.5rem);
   font-weight: 300;
-  opacity: 0.75;
+  line-height: 1.05;
+  color: #f0ece4;
+  opacity: 0;
+  animation: rew-fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.25s forwards;
+  margin: 0;
+}
+
+.rew-title em {
+  font-style: italic;
+  color: #e2c48a;
+}
+
+.rew-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  justify-content: center;
+  margin: 1.6rem auto;
+  opacity: 0;
+  animation: rew-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+}
+
+.rew-rule span {
+  width: 52px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a96e);
+}
+
+.rew-rule span:last-child {
+  background: linear-gradient(to left, transparent, #c9a96e);
+}
+
+.rew-rule i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c9a96e;
+  font-style: normal;
+}
+
+.rew-tagline {
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c8c2b8;
+  opacity: 0;
+  animation: rew-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.52s forwards;
+  margin: 0;
+}
+
+@keyframes rew-fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── TIMELINE ─────────────────────────────────────────────────────────────── */
@@ -416,10 +459,8 @@
 
 /* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
 @media (max-width: 700px) {
-  .rewind-page-header {
-    padding: 24px 20px 20px;
-    flex-direction: column;
-    gap: 6px;
+  .rew-header {
+    padding: 4rem 1.5rem 3rem;
   }
 
   .timeline {

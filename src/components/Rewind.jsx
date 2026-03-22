@@ -149,18 +149,18 @@ export default function Rewind() {
 
   return (
     <>
-      {/* Slim page header */}
-      <div className="rewind-page-header">
-        <div className="rewind-header-left">
-          <span className="rewind-label-red">TEDx</span>
-          <span className="rewind-label-white">IITTirupati</span>
-          <span className="rewind-slash">/</span>
-          <span className="rewind-label-page">Rewind</span>
+      {/* ── Header ── */}
+      <header className="rew-header">
+        <div className="rew-header__bg" />
+        <div className="rew-header__inner">
+          <span className="rew-eyebrow">Archive</span>
+          <h1 className="rew-title"><em>Rewind</em></h1>
+          <div className="rew-rule">
+            <span /><i /><span />
+          </div>
+          <p className="rew-tagline">Every edition, preserved.</p>
         </div>
-        <p className="rewind-header-sub">
-          <em>Every edition, preserved.</em>
-        </p>
-      </div>
+      </header>
 
       {/* Timeline */}
       <div className="timeline">
