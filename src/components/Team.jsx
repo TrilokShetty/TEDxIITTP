@@ -23,7 +23,7 @@ export const TEAM_DATA = [
     members: [
         {
         name: "Ritvik Ravi",
-        role: "Co-coordinator",
+        role: "Co-organiser",
         img: null, // placeholder — replace with image URL when available
       },
       {
