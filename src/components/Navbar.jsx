@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { label: "About", to: "/about" },
   { label: "Rewind", to: "/rewind" },
   { label: "Sponsors", to: "/coming-soon" },
-  { label: "Team", to: "/coming-soon" },
+  { label: "Team", to: "/team" },
 ];
 
 const NavLink = ({ label, icon, to }) => (
