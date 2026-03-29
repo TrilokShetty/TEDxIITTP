@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo-white.png";
 import Timer from "./Timer";
 
 import "./Hero.css";
@@ -354,7 +355,7 @@ const Hero = () => {
           textAlign: "center",
           padding: "0 24px",
           maxWidth: "900px",
-          marginTop: "64px", /* Shifts the content down slightly away from the navbar */
+          marginTop: "64px", /* Restored to prevent pushing everything down too far */
           opacity: ready ? 1 : 0,
           transition: "opacity 0.3s",
         }}
@@ -363,18 +364,23 @@ const Hero = () => {
         <div
           className="hero-line-1"
           style={{
-            fontFamily: "'Jost', sans-serif",
-            fontWeight: 300,
-            fontSize: "25px",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.6)",
-            marginBottom: "28px",
-            letterSpacing: "0",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: "6px" /* Reduced spacing between presents and Lexicon to pull the whole block closer */
           }}
         >
-          <span style={{ color: "#EE2922", fontWeight: 700, fontFamily: '"Arial Black", Arial, sans-serif', letterSpacing: "-0.5px" }}>TED</span>
-          <sup style={{ color: "#EE2922", fontSize: "11px", fontFamily: '"Arial Black", Arial, sans-serif', fontWeight: 700 }}>x</sup>
-          <span style={{ color: "rgba(255,255,255,0.85)", marginLeft: "4px", letterSpacing: "3px" , fontWeight: 600}}>IITTirupati</span>
+          <img src={logo} alt="TEDxIITTirupati" style={{ height: "72px", display: "block", marginBottom: "8px", objectFit: "contain" }} />
+          <div style={{
+            fontFamily: "'Jost', sans-serif",
+            fontWeight: 400,
+            fontSize: "15px",
+            letterSpacing: "7px",
+            color: "rgba(255,255,255,0.85)",
+            textTransform: "uppercase"
+          }}>
+            Presents
+          </div>
         </div>
 
         {/* Main title */}
