@@ -12,8 +12,7 @@ const TedxLogo = ({ onComplete }: { onComplete: () => void }) => {
   /* ── Phase B refs ──────────────────────────────────────────────────────── */
   const lockupRef = useRef<HTMLDivElement | null>(null);
   const scanRef = useRef<HTMLDivElement | null>(null);
-  const tedRef = useRef<HTMLSpanElement | null>(null);
-  const xTextRef = useRef<HTMLSpanElement | null>(null);
+  const tedRef = useRef<SVGSVGElement | null>(null);
   const iitRef = useRef<HTMLSpanElement | null>(null);
   const ruleRef = useRef<HTMLDivElement | null>(null);
   const lettersRef = useRef<Array<HTMLSpanElement | null>>([]);
@@ -35,7 +34,6 @@ const TedxLogo = ({ onComplete }: { onComplete: () => void }) => {
     const lockupEl = lockupRef.current;
     const scanEl = scanRef.current;
     const tedEl = tedRef.current;
-    const xTextEl = xTextRef.current;
     const iitEl = iitRef.current;
     const ruleEl = ruleRef.current;
     const letters = lettersRef.current;
@@ -59,7 +57,6 @@ const TedxLogo = ({ onComplete }: { onComplete: () => void }) => {
     gsap.set(lockupEl, { opacity: 0 });
     gsap.set(scanEl, { scaleX: 0, transformOrigin: "left" });
     gsap.set(tedEl, { opacity: 0, y: -22 });
-    gsap.set(xTextEl, { opacity: 0, y: -16 });
     gsap.set(iitEl, { opacity: 0, y: 10 });
     gsap.set(letters, { opacity: 0, y: 20 });
     gsap.set(ruleEl, { scaleX: 0, transformOrigin: "left" });
@@ -136,7 +133,6 @@ const TedxLogo = ({ onComplete }: { onComplete: () => void }) => {
     tl.to(scanEl, { scaleX: 1, duration: 0.65, ease: "power2.inOut" });
 
     tl.to(tedEl, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.4)" }, "-=0.42");
-    tl.to(xTextEl, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(1.4)" }, "-=0.28");
 
     tl.to(scanEl, { opacity: 0, duration: 0.3, ease: "power1.in" }, "-=0.1");
 
@@ -235,37 +231,41 @@ const TedxLogo = ({ onComplete }: { onComplete: () => void }) => {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "baseline" }}>
 
-            {/* TEDx */}
-            <div style={{ display: "flex", alignItems: "baseline" }}>
-              <span ref={tedRef} style={{
-                ...jost,
-                fontWeight: 700, fontSize: "clamp(34px, 7vw, 80px)",
-                color: RED, letterSpacing: "0.02em", textTransform: "uppercase",
-              }}>TED</span>
-              <span ref={xTextRef} style={{
-                ...jost,
-                fontWeight: 700, fontSize: "clamp(16px, 3vw, 36px)",
-                color: RED, verticalAlign: "super", lineHeight: 1,
-              }}>x</span>
+            {/* TEDx SVG directly from phase 1 to preserve exact x superscript proportions */}
+            <div style={{ display: "flex", alignItems: "baseline", fontSize: "clamp(32px, 6.5vw, 76px)" }}>
+              <svg 
+                  ref={tedRef}
+                  viewBox="25 65 226 68" 
+                  style={{ height: "0.73em", width: "auto" }}
+                  fill={RED}
+                  preserveAspectRatio="xMidYMid meet"
+              >
+                  <path d="M45.1,83.3H27V66.7h56v16.5H64.9v48H45.1V83.3z" />
+                  <path d="M86.1,66.7h54.4v16.5H106v8h34.5v15.4H106v8h34.5v16.5H86.1V66.7z" />
+                  <path d="M163.7,114.7h7.8c12.4,0,14.2-10,14.2-16.1c0-4.1-1.3-15.3-15.6-15.3h-6.3V114.7z
+                       M143.8,66.7h32.6c21.5,0,29.1,15.9,29.1,32.2c0,19.8-10.5,32.3-33,32.3h-28.7V66.7z" />
+                  <path d="M234.1,106.4L228,96.3l-5.9,10.1h-14.6L221.3,86L208,66.6h14.6l5.4,9.6l5.5-9.6h14.6
+                       L234.8,86l13.8,20.3H234.1z" />
+              </svg>
             </div>
 
-            {/* IIT TIRUPATI — flush against TEDx, no gap */}
-            <div style={{ display: "flex", alignItems: "baseline", gap: "clamp(4px, 1vw, 12px)" }}>
+            {/* IIT TIRUPATI — bold and crisp */}
+            <div style={{ display: "flex", alignItems: "baseline", gap: "clamp(3px, 0.8vw, 8px)", marginLeft: "clamp(4px, 1vw, 12px)" }}>
               <span ref={iitRef} style={{
                 ...jost,
-                fontWeight: 700, fontSize: "clamp(34px, 7vw, 80px)",
-                color: "rgba(255,255,255,0.88)",
-                letterSpacing: "0 em", textTransform: "uppercase",
+                fontWeight: 700, fontSize: "clamp(32px, 6.5vw, 76px)",
+                color: "rgba(255,255,255,0.92)",
+                letterSpacing: "0.02em",
               }}>IIT</span>
 
               <span style={{ display: "flex", overflow: "hidden" }}>
-                {WORD.split("").map((char, i) => (
+                {"Tirupati".split("").map((char, i) => (
                   <span key={i} ref={(el) => { lettersRef.current[i] = el; }} style={{
                     ...jost,
                     display: "inline-block",
-                    fontWeight: 700, fontSize: "clamp(34px, 7vw, 80px)",
-                    color: "rgba(255,255,255,0.88)",
-                    letterSpacing: "0 em", textTransform: "uppercase",
+                    fontWeight: 700, fontSize: "clamp(32px, 6.5vw, 76px)",
+                    color: "rgba(255,255,255,0.92)",
+                    letterSpacing: "0.02em",
                   }}>{char}</span>
                 ))}
               </span>
