@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo-white.png"; // Adjust path if your Navbar is in a different directory
 import "./Navbar.css";
 
@@ -12,12 +12,16 @@ const NAV_ITEMS = [
   { label: "Team", to: "/team" },
 ];
 
-const NavLink = ({ label, icon, to }) => (
-  <Link className="tedxNavLink" to={to}>
-    <span className="tedxNavLinkIcon">{icon}</span>
-    {label}
-  </Link>
-);
+const NavLinkItem = ({ label, icon, to }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+  return (
+    <Link className={`tedxNavLink ${isActive ? "isActive" : ""}`} to={to}>
+      {icon && <span className="tedxNavLinkIcon">{icon}</span>}
+      {label}
+    </Link>
+  );
+};
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -59,7 +63,7 @@ const Navbar = () => {
 
         <div className="tedxNavbarCenter">
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.label} {...item} />
+            <NavLinkItem key={item.label} {...item} />
           ))}
         </div>
 
@@ -81,7 +85,12 @@ const Navbar = () => {
       {menuOpen && (
         <div className="tedxMobileMenu">
           {NAV_ITEMS.map((item) => (
-            <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>
+            <Link 
+              key={item.label} 
+              to={item.to} 
+              onClick={() => setMenuOpen(false)}
+              className={window.location.pathname === item.to ? "isActive" : ""}
+            >
               {item.label}
             </Link>
           ))}

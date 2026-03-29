@@ -459,38 +459,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "36px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "8px",
-          animation: "heroFadeUp 1s 1.4s both",
-        }}
-      >
-        <div
-          style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            border: "1px solid var(--gold-border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--gold-dim)",
-            fontSize: "16px",
-            animation: "scrollBounce 2.2s ease-in-out infinite, pulseRing 2.2s ease-in-out infinite",
-          }}
-        >
-          ⌄
-        </div>
-      </div>
     </section>
   );
 };
