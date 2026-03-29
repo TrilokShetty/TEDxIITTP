@@ -240,6 +240,11 @@ export const TEAM_DATA = [
         role: "Partnership",
         img: cl("v1774680479/M_Pramod_Partnership_cffg0a.jpg"),
       },
+      {
+        name: "Vamsi",
+        role: "Partnership",
+        img: cl("v1774763582/Vamsi_partnership_1_luhiug.jpg"),
+      },
     ],
   },
 ];

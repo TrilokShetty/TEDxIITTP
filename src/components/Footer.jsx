@@ -291,7 +291,7 @@ const Footer = () => {
           <div className="ftx-col-brand">
             {/* Logo */}
             <div style={{ marginBottom: "28px", textAlign: "left" }}>
-              <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", marginLeft: "-14px" }}>
+              <Link to="/" onClick={() => window.scrollTo(0, 0)} style={{ textDecoration: 'none', display: "inline-flex", flexDirection: "column", alignItems: "center", marginLeft: "-14px" }}>
                 <img src={logo} alt="TEDxIITTirupati" style={{ height: "42px", display: "block", margin: 0 }} />
                 <div style={{
                   fontFamily: '"Arial", Helvetica, sans-serif',
@@ -304,7 +304,7 @@ const Footer = () => {
                 }}>
                   <span style={{ color: "red", fontWeight: 600 }}>x</span> = independently organized <span style={{ color: "#EB0028", fontWeight: 700 }}>TED</span> event
                 </div>
-              </div>
+              </Link>
             </div>
 
             {/* Theme reminder */}
