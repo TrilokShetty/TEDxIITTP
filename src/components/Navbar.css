@@ -65,13 +65,56 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .tedxNavbarLogo {
   flex-shrink: 0;
-  cursor:      pointer;
-  display:     flex;
+  cursor: pointer;
+  display: flex;
   align-items: center;
+  z-index: 10; /* Keeps logo clickable above absolute center items */
 }
 
-.tedxNavbarLogo .tedxLogo {
-  font-size: clamp(18px, 2.2vw, 26px);
+.tedxLogoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Base state: A bit bigger as requested */
+.tedxLogoImg {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  transition: height 0.32s ease;
+}
+
+/* Exactly matching the subline design from the IIT Jodhpur reference */
+.tedxSubline {
+  font-family: "Arial", Helvetica, sans-serif; /* TED standard font for sublines */
+  font-size: 9.6px;
+  color: rgba(255, 255, 255, 0.95);
+  margin-top: 1px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: font-size 0.32s ease, margin-top 0.32s ease;
+}
+
+.tedxSubline-x {
+  font-weight: 600;
+}
+
+.tedxSubline-red {
+  color: var(--nav-red);
+  font-weight: 700;
+}
+
+/* Scrolled state: Shrinks smoothly to fit the smaller 72px navbar */
+.isScrolled .tedxLogoImg {
+  height: 32px;
+}
+
+.isScrolled .tedxSubline {
+  font-size: 7.8px;
+  margin-top: 0px;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

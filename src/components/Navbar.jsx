@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TedxLogoText from "./TedxLogoText";
+import logo from "../assets/logo-white.png"; // Adjust path if your Navbar is in a different directory
 import "./Navbar.css";
 
 const NAV_ITEMS = [
@@ -46,9 +46,15 @@ const Navbar = () => {
   return (
     <>
       <nav className={`tedxNavbar${scrolled ? " isScrolled" : ""}`}>
-
+        
+        {/* Updated Logo Zone */}
         <div className="tedxNavbarLogo">
-          <TedxLogoText showTagline={true} />
+          <Link to="/" onClick={() => window.scrollTo(0, 0)} className="tedxLogoWrapper">
+            <img src={logo} alt="TEDx Logo" className="tedxLogoImg" />
+            <div className="tedxSubline">
+              <span className="tedxSubline-x" style={{color: "red"} }>x</span> = independently organized <span className="tedxSubline-red">TED</span> event
+            </div>
+          </Link>
         </div>
 
         <div className="tedxNavbarCenter">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo-white.png";
 
 /* ─── Ornamental divider SVG ─────────────────────────────────────────────── */
 const OrnDivider = () => (
@@ -289,43 +290,20 @@ const Footer = () => {
           {/* ── Brand + Contact ── */}
           <div className="ftx-col-brand">
             {/* Logo */}
-            <div style={{ marginBottom: "28px" }}>
-              <div style={{ display: "inline-flex", alignItems: "baseline", gap: "0px" }}>
-                <span style={{
-                  fontFamily: '"Arial Black", Arial, sans-serif',
-                  fontWeight: 900,
-                  color: "#EE2922",
-                  fontSize: "22px",
-                  letterSpacing: "-1px",
-                  lineHeight: 1,
-                }}>TED</span>
-                <sup style={{
-                  fontFamily: '"Arial Black", Arial, sans-serif',
-                  color: "#EE2922",
-                  fontSize: "10px",
-                  fontWeight: 900,
-                  letterSpacing: 0,
-                  lineHeight: 1,
-                }}>x</sup>
-                <span style={{
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontWeight: 300,
-                  color: "rgba(255,255,255,0.85)",
-                  fontSize: "22px",
-                  letterSpacing: "1px",
-                  marginLeft: "3px",
-                }}>IITTirupati</span>
-              </div>
-              <div style={{
-                fontFamily: "'Jost', sans-serif",
-                fontSize: "10px",
-                letterSpacing: "3px",
-                color: "rgba(255,255,255,0.55)",
-                textTransform: "uppercase",
-                marginTop: "5px",
-                fontWeight: 300,
-              }}>
-                Independently Organized TED Event
+            <div style={{ marginBottom: "28px", textAlign: "left" }}>
+              <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", marginLeft: "-14px" }}>
+                <img src={logo} alt="TEDxIITTirupati" style={{ height: "42px", display: "block", margin: 0 }} />
+                <div style={{
+                  fontFamily: '"Arial", Helvetica, sans-serif',
+                  fontSize: "9.6px",
+                  fontWeight: 500,
+                  color: "rgba(255, 255, 255, 0.95)",
+                  marginTop: "1px",
+                  letterSpacing: "0.2px",
+                  whiteSpace: "nowrap"
+                }}>
+                  <span style={{ color: "red", fontWeight: 600 }}>x</span> = independently organized <span style={{ color: "#EB0028", fontWeight: 700 }}>TED</span> event
+                </div>
               </div>
             </div>
 
