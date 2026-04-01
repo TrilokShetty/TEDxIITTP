@@ -21,17 +21,17 @@ export const TEAM_DATA = [
     group: "Organisers",
     tagline: "The vision behind it all",
     members: [
-        {
+      {
         name: "Ritvik Ravi",
         role: "Co-organiser",
-        img: null, // placeholder — replace with image URL when available
+        img: cl("v1775019541/Ritvik_Ravi_Co_Organiser_oqtdho.jpg"),
       },
       {
         name: "Kevin Prashan",
         role: "Co-organiser",
         img: cl("v1774680468/Kevin_Prashan___Co-organizer_f7kktg.jpg"),
       },
-      
+
     ],
   },
 
@@ -266,9 +266,9 @@ function getInitials(name) {
 // LAZY IMAGE — IntersectionObserver + fade-in + error → initials fallback
 // ─────────────────────────────────────────────────────────────────────────────
 function LazyImage({ src, alt, name }) {
-  const [visible, setVisible]   = useState(false);
-  const [loaded,  setLoaded]    = useState(false);
-  const [errored, setErrored]   = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
   const wrapRef = useRef(null);
 
   useEffect(() => {

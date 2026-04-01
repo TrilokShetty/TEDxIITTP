@@ -15,6 +15,7 @@ import About from "./components/About";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TnC";
 import Team from "./components/Team";
+import TicketConfirmed from "./components/TicketConfirmed";
 
 import "./App.css";
 
@@ -69,6 +70,7 @@ const AnimatedSections = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/ticket-confirmed" element={<TicketConfirmed />} />
           </Routes>
 
           {/* Footer always visible */}
