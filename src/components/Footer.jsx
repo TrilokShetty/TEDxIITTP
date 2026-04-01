@@ -388,8 +388,9 @@ const Footer = () => {
                 { label: "About", href: "/about" },
                 { label: "Speakers", href: "/coming-soon" },
                 { label: "Sponsors", href: "/coming-soon" },
-                { label: "Team", href: "/coming-soon" },
+                { label: "Team", href: "/team" },
                 { label: "Rewind", href: "/rewind" },
+                { label: "Tickets", href: "/tickets" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link to={l.href}>{l.label}</Link>
