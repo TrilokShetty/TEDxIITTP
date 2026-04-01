@@ -27,7 +27,16 @@ const razorpay = new Razorpay({
 
 // ── EXPRESS ──────────────────────────────────────────────────────────────────
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://tedx.iittp.ac.in",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://10.21.24.253:5173"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
 app.use(express.json());
 
 // ── SERVER-SIDE PRICE MAP (prevents amount tampering) ────────────────────────
