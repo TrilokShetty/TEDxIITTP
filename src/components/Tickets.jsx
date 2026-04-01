@@ -256,7 +256,7 @@ export default function Tickets() {
         order_id: orderId,
         name: "TEDxIITTirupati",
         description: `${pass.label} — Lexicon of the Awakening`,
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/TEDx_logo.svg/200px-TEDx_logo.svg.png",
+        image: "/image.png", // Correctly served from the public folder during deployment
         prefill: { name, email, contact: phone },
         theme: { color: "#eb0028" },
         modal: {
