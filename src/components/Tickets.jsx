@@ -230,7 +230,8 @@ export default function Tickets() {
       }
 
       // 2. Create order on backend
-      const orderRes = await fetch("/api/create-order", {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+      const orderRes = await fetch(`${API_BASE_URL}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -268,7 +269,8 @@ export default function Tickets() {
         handler: async function (response) {
           try {
             // 4. Verify payment on backend
-            const verifyRes = await fetch("/api/verify-payment", {
+            const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+            const verifyRes = await fetch(`${API_BASE_URL}/api/verify-payment`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
