@@ -6,10 +6,10 @@ import "./Navbar.css";
 const NAV_ITEMS = [
   { label: "Home", to: "/" },
   { label: "Speakers", to: "/coming-soon" },
-  { label: "Rewind", to: "/rewind" },
-  { label: "Sponsors", to: "/coming-soon" },
+  { label: "Sponsors", to: "/sponsors" },
   { label: "Team", to: "/team" },
   { label: "Tickets", to: "/tickets" },
+  { label: "Rewind", to: "/rewind" },
   { label: "About", to: "/about" },
 ];
 

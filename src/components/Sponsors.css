@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+/* ─── Header ────────────────────────────────────────────────────────────────── */
+.spn-header {
+    position: relative;
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--gold-border);
+    margin-top: 88px;
+}
+
+.spn-header__bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 85% 65% at 50% 110%, rgba(220, 15, 35, 0.5) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 35% at 85% 0%, rgba(201, 169, 110, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.spn-header__inner {
+    position: relative;
+    z-index: 1;
+}
+
+.spn-eyebrow {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: spn-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
+}
+
+.spn-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(3rem, 7.5vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: #f0ece4;
+    opacity: 0;
+    animation: spn-fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.25s forwards;
+    margin: 0;
+}
+
+.spn-title em {
+    font-style: italic;
+    color: var(--gold-bright);
+}
+
+.spn-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    justify-content: center;
+    margin: 1.6rem auto;
+    opacity: 0;
+    animation: spn-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+}
+
+.spn-rule span {
+    width: 52px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+}
+
+.spn-rule span:last-child {
+    background: linear-gradient(to left, transparent, var(--gold));
+}
+
+.spn-rule i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    font-style: normal;
+}
+
+.spn-tagline {
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #c8c2b8;
+    opacity: 0;
+    animation: spn-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.52s forwards;
+    margin: 0;
+}
+
+@keyframes spn-fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Page wrapper ──────────────────────────────────────────────────────────── */
+.sponsors-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 72px 48px 100px;
+}
+
+/* ─── Grid ──────────────────────────────────────────────────────────────────── */
+.sponsors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+}
+
+/* ─── Sponsor Item Wrapper ─────────────────────────────────────────────────── */
+.sponsor-item {
+    flex: 0 0 min(340px, calc(33.333% - 22px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ─── Sponsor card — landscape 16 : 7 ──────────────────────────────────────── */
+.sponsor-card {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0e0e0e;
+    border: 1px solid var(--gold-border);
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        border-color 0.35s ease,
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Red sweep bar along the bottom */
+.sponsor-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.4s ease;
+    z-index: 3;
+}
+
+.sponsor-card:hover::after {
+    width: 100%;
+}
+
+.sponsor-card:hover {
+    border-color: rgba(201, 169, 110, 0.55);
+    transform: translateY(-4px);
+}
+
+/* ─── Logo area — full-bleed, covers entire card ────────────────────────────── */
+.sponsor-card__logo-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.sponsor-card__logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: none;
+}
+
+/* Placeholder abbreviation */
+.sponsor-card__abbr {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3.8vw, 52px);
+    font-weight: 300;
+    color: var(--gold-border);
+    letter-spacing: 0.1em;
+    user-select: none;
+    transition: color 0.35s ease;
+    z-index: 2;
+}
+
+.sponsor-card:hover .sponsor-card__abbr {
+    color: var(--gold);
+}
+
+/* ─── Sponsor Info below card ───────────────────────────────────────────────── */
+.sponsor-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.sponsor-info__name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #f0ece4;
+    line-height: 1.2;
+}
+
+.sponsor-info__descriptor {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+/* ─── CTA ───────────────────────────────────────────────────────────────────── */
+.spn-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding-top: 72px;
+    margin-top: 72px;
+    border-top: 1px solid var(--gold-border);
+}
+
+.spn-cta__line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-border));
+}
+
+.spn-cta__line--right {
+    background: linear-gradient(to left, transparent, var(--gold-border));
+}
+
+.spn-cta__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.spn-cta__copy {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.4vw, 24px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--white);
+    opacity: 0.75;
+    margin: 0;
+}
+
+.spn-cta__btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 11px 28px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, color 0.3s, letter-spacing 0.3s;
+}
+
+.spn-cta__btn:hover {
+    background: var(--red);
+    color: var(--white);
+    letter-spacing: 0.52em;
+}
+
+/* ─── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .sponsors-page {
+        padding: 48px 20px 80px;
+    }
+
+    .sponsor-item {
+        flex: 0 0 calc(50% - 16px);
+    }
+}
+
+@media (max-width: 420px) {
+    .sponsor-item {
+        flex: 0 0 100%;
+    }
+}
