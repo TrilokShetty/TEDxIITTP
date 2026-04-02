@@ -19,10 +19,7 @@
     pointer-events: none;
 }
 
-.spn-header__inner {
-    position: relative;
-    z-index: 1;
-}
+.spn-header__inner { position: relative; z-index: 1; }
 
 .spn-eyebrow {
     display: inline-block;
@@ -48,10 +45,7 @@
     margin: 0;
 }
 
-.spn-title em {
-    font-style: italic;
-    color: var(--gold-bright);
-}
+.spn-title em { font-style: italic; color: var(--gold-bright); }
 
 .spn-rule {
     display: flex;
@@ -69,9 +63,7 @@
     background: linear-gradient(to right, transparent, var(--gold));
 }
 
-.spn-rule span:last-child {
-    background: linear-gradient(to left, transparent, var(--gold));
-}
+.spn-rule span:last-child { background: linear-gradient(to left, transparent, var(--gold)); }
 
 .spn-rule i {
     width: 5px;
@@ -92,41 +84,36 @@
 }
 
 @keyframes spn-fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ─── Page wrapper ──────────────────────────────────────────────────────────── */
 .sponsors-page {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 72px 48px 100px;
+    padding: 64px 48px 100px;
 }
 
-/* ─── Grid ──────────────────────────────────────────────────────────────────── */
+/* ─── Grid — 2×2, constrained width so cards aren't huge ───────────────────── */
 .sponsors-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 32px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 620px;        /* ← sweet spot: bigger than 3-col, not overwhelming */
+    margin: 0 auto;
 }
 
 /* ─── Sponsor Item Wrapper ─────────────────────────────────────────────────── */
 .sponsor-item {
-    flex: 0 0 min(340px, calc(33.333% - 22px));
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
 }
 
-/* ─── Sponsor card — landscape 16 : 7 ──────────────────────────────────────── */
+/* ─── Sponsor card — 16∶7, same as original ─────────────────────────────────── */
 .sponsor-card {
     width: 100%;
     aspect-ratio: 16 / 7;
@@ -141,32 +128,30 @@
     cursor: pointer;
     transition:
         border-color 0.35s ease,
-        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transform    0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow   0.35s ease;
 }
 
 /* Red sweep bar along the bottom */
 .sponsor-card::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
     background: var(--red);
     transition: width 0.4s ease;
     z-index: 3;
 }
 
-.sponsor-card:hover::after {
-    width: 100%;
-}
+.sponsor-card:hover::after { width: 100%; }
 
 .sponsor-card:hover {
     border-color: rgba(201, 169, 110, 0.55);
     transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 169, 110, 0.18);
 }
 
-/* ─── Logo area — full-bleed, covers entire card ────────────────────────────── */
+/* ─── Logo area — full-bleed ────────────────────────────────────────────────── */
 .sponsor-card__logo-wrap {
     position: absolute;
     inset: 0;
@@ -182,12 +167,15 @@
     object-fit: cover;
     object-position: center;
     filter: none;
+    transition: transform 0.4s ease;
 }
+
+.sponsor-card:hover .sponsor-card__logo-img { transform: scale(1.04); }
 
 /* Placeholder abbreviation */
 .sponsor-card__abbr {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(32px, 3.8vw, 52px);
+    font-size: clamp(28px, 3.2vw, 44px);
     font-weight: 300;
     color: var(--gold-border);
     letter-spacing: 0.1em;
@@ -196,23 +184,21 @@
     z-index: 2;
 }
 
-.sponsor-card:hover .sponsor-card__abbr {
-    color: var(--gold);
-}
+.sponsor-card:hover .sponsor-card__abbr { color: var(--gold); }
 
 /* ─── Sponsor Info below card ───────────────────────────────────────────────── */
 .sponsor-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     text-align: center;
 }
 
 .sponsor-info__name {
     font-family: 'Cormorant Garamond', serif;
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 500;
     color: #f0ece4;
     line-height: 1.2;
 }
@@ -220,10 +206,11 @@
 .sponsor-info__descriptor {
     font-family: 'Montserrat', sans-serif;
     font-size: 8px;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--gold);
+    opacity: 1;
 }
 
 /* ─── CTA ───────────────────────────────────────────────────────────────────── */
@@ -285,18 +272,11 @@
 }
 
 /* ─── Responsive ────────────────────────────────────────────────────────────── */
-@media (max-width: 700px) {
-    .sponsors-page {
-        padding: 48px 20px 80px;
-    }
+@media (max-width: 640px) {
+    .sponsors-page { padding: 48px 20px 80px; }
 
-    .sponsor-item {
-        flex: 0 0 calc(50% - 16px);
-    }
-}
-
-@media (max-width: 420px) {
-    .sponsor-item {
-        flex: 0 0 100%;
+    .sponsors-grid {
+        grid-template-columns: 1fr;
+        max-width: 360px;
     }
 }

@@ -4,13 +4,16 @@ import "./Sponsors.css";
 import visionPhoto from "../assets/Vision_Photography.jpeg";
 import beautifulTirupati from "../assets/Beautiful_Tirupathi.jpeg";
 import doonMerch from "../assets/Doon_Merchandise.png";
+import srikesh from "../assets/Srikesh.png";
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 
 const SPONSORS = [
-    { name: "Vision Photography", descriptor: "Event Partner", logo: visionPhoto, url: "https://www.instagram.com/visionphotography_tirupati" },
-    { name: "Beautiful Tirupathi", descriptor: "Event Partner", logo: beautifulTirupati, url: "https://www.instagram.com/beautifultirupathi" },
-    { name: "Doon Merchandise", descriptor: "Event Partner", logo: doonMerch, url: "https://www.instagram.com/offiicial_doon" },
+    { name: "Vision Photography", descriptor: "Photography Partner", logo: visionPhoto, url: "https://www.instagram.com/visionphotography_tirupati" },
+    { name: "Beautiful Tirupathi", descriptor: "Social Media Partner", logo: beautifulTirupati, url: "https://www.instagram.com/beautifultirupathi" },
+    { name: "Doon Merchandise", descriptor: "Clothing Partner", logo: doonMerch, url: "https://www.instagram.com/offiicial_doon" },
+    { name: "Srikesh Infotech", descriptor: "Event Partner", logo: srikesh, url: "https://www.srikeshinfotech.com/" },
+
 ];
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
