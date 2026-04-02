@@ -7,12 +7,12 @@ const PASSES = [
   {
     id: "regular",
     label: "Regular Pass",
-    price: 399,
+    price: 349,
     tagline: "Your gateway to ideas worth spreading.",
     perks: [
-      "Access to all 5 TEDx Talks",
+      "Access to all 6 TEDx Talks",
       "Exclusive TEDxIIT Tirupati Goodies",
-      "Brand Kit: Tote Bag, Notepad, Pen, Badge",
+      "Brand Kit: Exclusive Bag, Notepad, Pen, Badge",
       "Refreshments & Snacks",
       "An Unforgettable TEDx Experience",
     ],
@@ -21,13 +21,13 @@ const PASSES = [
   {
     id: "premium",
     label: "Premium Pass",
-    price: 599,
+    price: 549,
     tagline: "Immerse deeper. Engage fully. Remember forever.",
     perks: [
-      "Access to all 5 TEDx Talks",
+      "Access to all 6 TEDx Talks",
       "Priority Seating - reserved front rows",
       "Exclusive TEDxIIT Tirupati Goodies",
-      "Brand Kit: Tote Bag, Notepad, Pen, Badge, Keychain, Canvas Pouch, Bookmark & Sticker",
+      "Brand Kit: Exclusive Bag, Official ID Card, Notepad, Pen, Badge, Keychain, Canvas Pouch, Bookmark & Sticker",
       "Refreshments & Snacks",
       "An Unforgettable TEDx Experience",
     ],

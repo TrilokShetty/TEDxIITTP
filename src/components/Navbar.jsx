@@ -6,11 +6,11 @@ import "./Navbar.css";
 const NAV_ITEMS = [
   { label: "Home", to: "/" },
   { label: "Speakers", to: "/coming-soon" },
-  { label: "About", to: "/about" },
   { label: "Rewind", to: "/rewind" },
   { label: "Sponsors", to: "/coming-soon" },
   { label: "Team", to: "/team" },
   { label: "Tickets", to: "/tickets" },
+  { label: "About", to: "/about" },
 ];
 
 const NavLinkItem = ({ label, icon, to }) => {
