@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Tickets.css";
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
+const BOOKING_ENABLED = false;
 
 const PASSES = [
   {
@@ -177,14 +178,17 @@ function PassCard({ pass, selected, onSelect, onBook }) {
       </ul>
 
       <button
-        className="pass-cta"
-        onClick={(e) => { e.stopPropagation(); onBook(pass); }}
-        aria-label={`Book ${pass.label}`}
+        className={`pass-cta ${!BOOKING_ENABLED ? "pass-cta--disabled" : ""}`}
+        disabled={!BOOKING_ENABLED}
+        onClick={(e) => { e.stopPropagation(); if (BOOKING_ENABLED) onBook(pass); }}
+        aria-label={BOOKING_ENABLED ? `Book ${pass.label}` : "Bookings Starting Soon"}
       >
-        <span>Book {pass.label}</span>
-        <svg className="cta-arrow" viewBox="0 0 20 10" fill="none">
-          <path d="M0 5H18M14 1L18 5L14 9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-        </svg>
+        <span>{BOOKING_ENABLED ? `Book ${pass.label}` : "Bookings Starting Soon"}</span>
+        {BOOKING_ENABLED && (
+          <svg className="cta-arrow" viewBox="0 0 20 10" fill="none">
+            <path d="M0 5H18M14 1L18 5L14 9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+          </svg>
+        )}
       </button>
 
       <p className="pass-note">Powered by Razorpay · Secure checkout</p>

@@ -355,6 +355,18 @@
   opacity: 0.7;
 }
 
+.pass-cta--disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  border-color: rgba(245, 240, 232, 0.15) !important;
+  color: rgba(245, 240, 232, 0.4) !important;
+  cursor: not-allowed;
+}
+
+.pass-cta--disabled::after {
+  display: none;
+}
+
 .cta-arrow {
   width: 20px;
   height: 10px;
