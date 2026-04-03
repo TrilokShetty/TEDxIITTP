@@ -15,6 +15,7 @@ import "./Speakers.css";
 
 
 import kajal from "../assets/speakers/Kajal_Singh.jpeg";
+import vivek from "../assets/speakers/vivek_atray.jpeg";
 
 
 const SPEAKERS = [
@@ -29,12 +30,12 @@ const SPEAKERS = [
   },
   {
     id: 2,
-    revealed: false,
-    name: "Dr. Maral Yazarloo",
-    tag: "World Record Holder · Women's Rights Advocate",
-    instagram: "",
-    bio: "Dr. Maral Yazarloo-Pattrick is an Iran-born motor-biking world record holder, fashion designer, artist, and campaigner for women's rights. She holds the record for the highest mileage on a superbike for ladies — over 2,50,000 km — earning her the title 'Queen of Superbikes of India'. Recognised among BBC's Top 100 Inspiring and Influential Women, she has captivated audiences at TEDx, the Retail Forum in Las Vegas, LFS Conclave in India, and Virginia Commonwealth University of Qatar.",
-    img: null,
+    revealed: true,
+    name: "Mr. Vivek Atray",
+    tag: "Civil Services · Leadership · Personal Development",
+    instagram: "https://www.instagram.com/vivekatray/",
+    bio: "Mr. Vivek Atray is a former IAS officer turned author, speaker, and leadership mentor, known for his impactful work in governance and personal development. During his tenure in the civil services, he held several key administrative roles, contributing to policy-making and public administration. After leaving the IAS, he transitioned into writing and public speaking, where he focuses on life design, leadership, and inner growth. His books and talks emphasize clarity, purpose, and the power of conscious decision-making. Mr. Atray brings a rare blend of bureaucratic experience and philosophical insight, making his perspectives both practical and deeply reflective.",
+    img: vivek,
   },
   {
     id: 3,
