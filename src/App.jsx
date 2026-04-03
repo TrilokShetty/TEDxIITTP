@@ -17,6 +17,7 @@ import TermsAndConditions from "./components/TnC";
 import Team from "./components/Team";
 import TicketConfirmed from "./components/TicketConfirmed";
 import Sponsors from "./components/Sponsors";
+import Speakers from "./components/Speakers";
 
 import "./App.css";
 
@@ -73,6 +74,7 @@ const AnimatedSections = () => {
             <Route path="/team" element={<Team />} />
             <Route path="/ticket-confirmed" element={<TicketConfirmed />} />
             <Route path="/sponsors" element={<Sponsors />} />
+            <Route path="/speakers" element={<Speakers />} />
           </Routes>
 
           {/* Footer always visible */}

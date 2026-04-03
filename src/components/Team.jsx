@@ -88,6 +88,11 @@ export const TEAM_DATA = [
         role: "Digital Experience",
         img: cl("v1774680484/DivinoAdorat_DX_rlimm4.jpg"),
       },
+      {
+        name: "Trilok",
+        role: "Digital Experience",
+        img: cl("v1775208511/Trilok_DX_r5wnku.jpg"),
+      },
     ],
   },
 
