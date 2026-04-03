@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Tickets.css";
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
@@ -46,6 +46,92 @@ function loadRazorpay() {
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
   });
+}
+
+// ── ANIMATED PRICE DIGIT ──────────────────────────────────────────────────────
+// Renders a single digit that continuously cycles through 0-9 with a slot-machine roll.
+function AnimatedDigit({ targetDigit, revealed, delay = 0 }) {
+  const [displayDigit, setDisplayDigit] = useState(Math.floor(Math.random() * 10));
+  const [locked, setLocked] = useState(false);
+  const intervalRef = useRef(null);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (revealed) {
+      // Lock in to real digit after a staggered delay
+      timeoutRef.current = setTimeout(() => {
+        clearInterval(intervalRef.current);
+        setDisplayDigit(targetDigit);
+        setLocked(true);
+      }, delay);
+      return () => {
+        clearTimeout(timeoutRef.current);
+        clearInterval(intervalRef.current);
+      };
+    }
+
+    // Continuous random cycling — speed varies for organic feel
+    const tick = () => {
+      setDisplayDigit(Math.floor(Math.random() * 10));
+      // Reschedule with slight variance so digits don't sync up
+      intervalRef.current = setTimeout(tick, 300 + Math.random() * 200);
+    };
+    intervalRef.current = setTimeout(tick, Math.random() * 400);
+
+    return () => clearTimeout(intervalRef.current);
+  }, [revealed, targetDigit, delay]);
+
+  return (
+    <span
+      className={`price-digit ${locked ? "price-digit--locked" : "price-digit--rolling"}`}
+    >
+      {displayDigit}
+    </span>
+  );
+}
+
+// ── ANIMATED PRICE DISPLAY ────────────────────────────────────────────────────
+function AnimatedPrice({ price }) {
+  const digits = String(price).split("").map(Number);
+
+  if (BOOKING_ENABLED) {
+    // Revealed: show actual price with a brief lock-in animation
+    return (
+      <div className="pass-price">
+        <span className="pass-currency">₹</span>
+        <span className="pass-amount pass-amount--revealed">
+          {digits.map((d, i) => (
+            <AnimatedDigit
+              key={i}
+              targetDigit={d}
+              revealed={true}
+              delay={i * 120}
+            />
+          ))}
+        </span>
+      </div>
+    );
+  }
+
+  // Hidden: continuously rolling digits
+  return (
+    <div className="pass-price">
+      <span className="pass-currency pass-currency--hidden">₹</span>
+      <span className="pass-amount">
+        {digits.map((_, i) => (
+          <AnimatedDigit
+            key={i}
+            targetDigit={0}
+            revealed={false}
+            delay={0}
+          />
+        ))}
+      </span>
+      <span className="price-mystery-label" aria-label="Price revealed at booking">
+        <span className="price-mystery-text">Reveal on launch</span>
+      </span>
+    </div>
+  );
 }
 
 // ── PERK ITEM ─────────────────────────────────────────────────────────────────
@@ -162,10 +248,7 @@ function PassCard({ pass, selected, onSelect, onBook }) {
 
       <div className="pass-header">
         <span className="pass-label">{pass.label}</span>
-        <div className="pass-price">
-          <span className="pass-currency">₹</span>
-          <span className="pass-amount">{pass.price}</span>
-        </div>
+        <AnimatedPrice price={pass.price} />
         <p className="pass-tagline">{pass.tagline}</p>
       </div>
 
@@ -200,9 +283,9 @@ function PassCard({ pass, selected, onSelect, onBook }) {
 export default function Tickets() {
   const [selected, setSelected] = useState("premium");
   const [visible, setVisible] = useState(false);
-  const [modalPass, setModalPass] = useState(null);   // which pass the modal is open for
-  const [paying, setPaying] = useState(false);         // loading overlay during payment
-  const [toast, setToast] = useState(null);            // { message, type }
+  const [modalPass, setModalPass] = useState(null);
+  const [paying, setPaying] = useState(false);
+  const [toast, setToast] = useState(null);
 
   const showToast = (message, type = "error") => {
     setToast({ message, type });
@@ -214,10 +297,7 @@ export default function Tickets() {
     return () => clearTimeout(t);
   }, []);
 
-  // ── CHECKOUT FLOW ────────────────────────────────────────────────────────
-  const handleBook = (pass) => {
-    setModalPass(pass);
-  };
+  const handleBook = (pass) => setModalPass(pass);
 
   const handleModalSubmit = async ({ name, email, phone }) => {
     const pass = modalPass;
@@ -225,7 +305,6 @@ export default function Tickets() {
     setPaying(true);
 
     try {
-      // 1. Load Razorpay script
       const scriptLoaded = await loadRazorpay();
       if (!scriptLoaded) {
         showToast("Failed to load payment gateway. Please check your connection.");
@@ -233,7 +312,6 @@ export default function Tickets() {
         return;
       }
 
-      // 2. Create order on backend
       const orderRes = await fetch(`/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -254,13 +332,12 @@ export default function Tickets() {
 
       const { orderId, keyId } = await orderRes.json();
 
-      // 3. Open Razorpay checkout
       const options = {
         key: keyId,
         order_id: orderId,
         name: "TEDxIITTirupati",
         description: `${pass.label} — Lexicon of the Awakening`,
-        image: "/image.png", // Correctly served from the public folder during deployment
+        image: "/image.png",
         prefill: { name, email, contact: phone },
         theme: { color: "#eb0028" },
         modal: {
@@ -271,7 +348,6 @@ export default function Tickets() {
         },
         handler: async function (response) {
           try {
-            // 4. Verify payment on backend
             const verifyRes = await fetch(`/api/verify-payment`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -311,10 +387,8 @@ export default function Tickets() {
     }
   };
 
-  // ── RENDER ───────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── Header ── */}
       <header className="tix-header">
         <div className="tix-header__glow" />
         <div className={`tix-header__inner ${visible ? "tix-visible" : ""}`}>
@@ -331,7 +405,6 @@ export default function Tickets() {
         </div>
       </header>
 
-      {/* ── Cards ── */}
       <section className="tix-section">
         <div className={`tix-grid ${visible ? "tix-visible" : ""}`}>
           {PASSES.map((pass) => (
@@ -352,7 +425,6 @@ export default function Tickets() {
         </p>
       </section>
 
-      {/* ── User Details Modal ── */}
       {modalPass && (
         <UserDetailsModal
           pass={modalPass}
@@ -361,7 +433,6 @@ export default function Tickets() {
         />
       )}
 
-      {/* ── Full-screen loading overlay during payment ── */}
       {paying && (
         <div className="payment-overlay">
           <span className="cta-spinner payment-spinner" />
@@ -369,7 +440,6 @@ export default function Tickets() {
         </div>
       )}
 
-      {/* ── Toast notification ── */}
       {toast && (
         <div className={`toast-notification toast--${toast.type}`}>
           <span className="toast-icon" aria-hidden="true">

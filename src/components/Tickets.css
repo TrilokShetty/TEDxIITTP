@@ -206,6 +206,8 @@
   gap: 2px;
   margin-bottom: 12px;
   line-height: 1;
+  flex-wrap: wrap;
+  row-gap: 6px;
 }
 
 .pass-currency {
@@ -214,9 +216,14 @@
   font-weight: 300;
   color: var(--red);
   line-height: 1;
-  /* nudge to sit on the same baseline as the serif numeral */
   position: relative;
   top: -0.12em;
+}
+
+/* Currency symbol stays fully vivid in both states */
+.pass-currency--hidden {
+  opacity: 1;
+  filter: none;
 }
 
 .pass-amount {
@@ -225,6 +232,14 @@
   font-weight: 300;
   color: #f0ece4;
   line-height: 1;
+  display: inline-flex;
+  gap: 0;
+  /* children inherit this colour when not rolling */
+  --digit-color: #f0ece4;
+}
+
+.pass-amount--revealed .price-digit--locked {
+  animation: digitLockIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .pass-tagline {
@@ -734,4 +749,74 @@
   .toast-message {
     font-size: 11px;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* ── ANIMATED PRICE DIGITS ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════ */
+
+/* Each digit sits in its own box so they can be animated independently */
+.price-digit {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: inherit;
+  font-weight: 300;
+  line-height: 1;
+  vertical-align: baseline;
+}
+
+/* While rolling: slightly dimmed but readable — calm and unhurried */
+.price-digit--rolling {
+  color: rgba(240, 236, 228, 0.72);
+  animation: digitDrift 0.55s steps(1) infinite;
+  text-shadow: none;
+  filter: none;
+}
+
+/* Once locked in: fully inherit parent — no colour or filter override at all */
+.price-digit--locked {
+  color: inherit;
+  text-shadow: none;
+  filter: none;
+  opacity: 1;
+}
+
+/* Lock-in keyframe: brief scale snap only — colour stays inherited throughout */
+@keyframes digitLockIn {
+  0%   { transform: scaleY(1.06); opacity: 0.7; }
+  60%  { transform: scaleY(1.01); opacity: 1;   }
+  100% { transform: scaleY(1);    opacity: 1;   }
+}
+
+/* Slow, calm drift — like a quiet scoreboard turning over */
+@keyframes digitDrift {
+  0%   { opacity: 0.55; transform: translateY(0); }
+  50%  { opacity: 0.75; transform: translateY(-1px); }
+  100% { opacity: 0.55; transform: translateY(0); }
+}
+
+/* ── "Reveal on launch" label under the scrambling price ─────────────────── */
+.price-mystery-label {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;          /* sits on the baseline of the price row */
+  margin-left: 10px;
+  margin-bottom: 4px;
+}
+
+.price-mystery-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a96e);
+  opacity: 0.6;
+  /* Slow pulse so it reads as "live" without being distracting */
+  animation: mysteryPulse 2.4s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes mysteryPulse {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.75; }
 }
