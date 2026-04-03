@@ -385,7 +385,7 @@ const Footer = () => {
             <ul className="ftx-nav-list">
               {[
                 { label: "Home", href: "/" },
-                { label: "Speakers", href: "/coming-soon" },
+                { label: "Speakers", href: "/speakers" },
                 { label: "Sponsors", href: "/sponsors" },
                 { label: "Team", href: "/team" },
                 { label: "Tickets", href: "/tickets" },
