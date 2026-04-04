@@ -10,6 +10,7 @@ import "./Speakers.css";
 //   2. Copy one of the objects below, paste it at the END of the SPEAKERS array
 //      (before the closing bracket `]`), and fill in the fields.
 //   3. Set `revealed: false` to show the "Revealing Soon" card instead.
+//   4. Set `linkedin: null` to hide the LinkedIn button for that speaker.
 //
 // ── APPEND NEW SPEAKERS BELOW THIS LINE ──────────────────────────────────────
 
@@ -17,6 +18,7 @@ import "./Speakers.css";
 import kajal from "../assets/speakers/Kajal_Singh.jpeg";
 import vivek from "../assets/speakers/vivek_atray.jpeg";
 import joshiba from "../assets/speakers/Joshiba.jpeg";
+import srikant from "../assets/speakers/Srikant.jpeg";
 
 
 const SPEAKERS = [
@@ -25,7 +27,8 @@ const SPEAKERS = [
     revealed: true,
     name: "Dr. Kajal Singh",
     tag: "Public Health · Preventive Healthcare · Community Awareness",
-    instagram: "https://www.instagram.com/drkajalsinghh/", // ← replace with real handle
+    instagram: "https://www.instagram.com/drkajalsinghh/",
+    linkedin: "https://www.linkedin.com/in/drkajalsinghh/", 
     bio: "Dr. Kajal Singh is a medical professional and public health advocate committed to improving healthcare awareness and accessibility. Her work lies at the intersection of clinical practice and preventive healthcare, focusing on educating communities about health risks, early intervention, and lifestyle changes. She represents a new generation of healthcare professionals who go beyond hospitals to engage directly with the public, emphasizing that awareness is often the first step toward better health outcomes.",
     img: kajal,
   },
@@ -35,6 +38,7 @@ const SPEAKERS = [
     name: "Mr. Vivek Atray",
     tag: "Civil Services · Leadership · Personal Development",
     instagram: "https://www.instagram.com/vivekatray/",
+    linkedin: "https://www.linkedin.com/in/vivek-atray-9464434/", 
     bio: "Mr. Vivek Atray is a former IAS officer turned author, speaker, and leadership mentor, known for his impactful work in governance and personal development. During his tenure in the civil services, he held several key administrative roles, contributing to policy-making and public administration. After leaving the IAS, he transitioned into writing and public speaking, where he focuses on life design, leadership, and inner growth. His books and talks emphasize clarity, purpose, and the power of conscious decision-making. Mr. Atray brings a rare blend of bureaucratic experience and philosophical insight, making his perspectives both practical and deeply reflective.",
     img: vivek,
   },
@@ -44,17 +48,19 @@ const SPEAKERS = [
     name: "Ms. Joshiba Dev",
     tag: "Legal Education · Financial Literacy · Legal Awareness",
     instagram: "https://www.instagram.com/legallyfitjoshiba/",
+    linkedin: "https://www.linkedin.com/in/adv-joshiba-dev/", 
     bio: "Joshiba Dev is a legal educator and founder of Legally Fit, a platform dedicated to making legal and financial literacy accessible to all. Through her digital content, she simplifies complex legal concepts and empowers individuals to understand their rights and responsibilities. Her work focuses on bridging the gap between law and everyday life.",
     img: joshiba,
   },
   {
     id: 4,
-    revealed: false,
-    name: "Mr. Shiv Vats",
-    tag: "Educator · EnglishWaleSir",
-    instagram: "https://www.instagram.com/placeholder/",
-    bio: "Mr. Shiv Vats, popularly known as EnglishWaleSir, is a visionary educator and digital content creator whose unique teaching style has revolutionised the learning experience. Beyond language instruction, he fosters critical thinking, confidence, and a love for learning through engaging, relatable storytelling. His commitment to redefining traditional teaching has earned him a massive following across social media, making him a mentor to students from all walks of life.",
-    img: null,
+    revealed: true,
+    name: "Mr. Shrikant Madhav Vaidya",
+    tag: "Energy Sector · Oil & Gas · Leadership · Sustainability",
+    instagram: null,
+    linkedin: "https://www.linkedin.com/in/shrikant-m-vaidya/",
+    bio: "Shrikant Madhav Vaidya is a distinguished leader in India’s energy sector, having served as the Chairman of Indian Oil Corporation, one of the country’s largest public sector enterprises. With decades of experience in oil, gas, and energy infrastructure, he has been instrumental in steering large-scale operations and navigating the evolving landscape of energy demands. His leadership reflects a strong focus on sustainability, energy transition, and innovation within traditional industries. Vaidya’s journey exemplifies how legacy industries can adapt to global challenges while continuing to drive national growth.",
+    img: srikant,
   },
   {
     id: 5,
@@ -62,27 +68,30 @@ const SPEAKERS = [
     name: "Mr. Piyush Somani",
     tag: "Entrepreneur · Founder, ESDS Software",
     instagram: "https://www.instagram.com/placeholder/",
+    linkedin: null,
     bio: "A visionary and born leader, Mr. Piyush Somani founded ESDS Software Solution at 23 with a mission to build an organisation where respect for the company always transcends self-interest. With a workforce of nearly 1,000+ employees across domestic and international offices, he personally connects with each team member. A first-generation entrepreneur featured in Forbes, The Economic Times, Times of India, and Business Insider.",
     img: null,
   },
   {
-    id: 5,
+    id: 6,
     revealed: false,
     name: "Mr. Piyush Somani",
     tag: "Entrepreneur · Founder, ESDS Software",
     instagram: "https://www.instagram.com/placeholder/",
+    linkedin: null,
     bio: "A visionary and born leader, Mr. Piyush Somani founded ESDS Software Solution at 23 with a mission to build an organisation where respect for the company always transcends self-interest. With a workforce of nearly 1,000+ employees across domestic and international offices, he personally connects with each team member. A first-generation entrepreneur featured in Forbes, The Economic Times, Times of India, and Business Insider.",
     img: null,
   },
   // ── PASTE NEW SPEAKERS BELOW THIS COMMENT ────────────────────────────────
   // {
   //   id: 6,
-  //   revealed: false,          ← set to true once ready to reveal
+  //   revealed: false,      //    ← set to true once ready to reveal
   //   name: "Speaker Name",
   //   tag: "Role · Affiliation",
   //   instagram: "https://www.instagram.com/handle/",
+  //   linkedin: "https://www.linkedin.com/in/handle/",  // ← or null to hide
   //   bio: "Bio text goes here.",
-  //   img: photoF,              ← import the photo at the top of the file
+  //   img: photoF,          //    ← import the photo at the top of the file
   // },
   // ── END OF SPEAKER LIST ───────────────────────────────────────────────────
 ];
@@ -115,6 +124,27 @@ function InstagramIcon() {
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="3" ry="3" />
+      <line x1="8" y1="11" x2="8" y2="16" />
+      <line x1="8" y1="8" x2="8" y2="8.01" strokeWidth="2" />
+      <path d="M12 16v-5" />
+      <path d="M16 16v-3a2 2 0 0 0-4 0" />
     </svg>
   );
 }
@@ -189,18 +219,37 @@ function SpeakerRow({ speaker, index }) {
         <p className="sp-bio">{speaker.bio}</p>
 
         <div className="sp-actions">
-          <a
-            className="sp-insta-btn"
-            href={speaker.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${speaker.name} on Instagram`}
-          >
-            <span className="sp-insta-icon">
-              <InstagramIcon />
-            </span>
-            <span>Follow on Instagram</span>
-          </a>
+          {/* Instagram */}
+          {speaker.instagram && (
+            <a
+              className="sp-insta-btn"
+              href={speaker.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${speaker.name} on Instagram`}
+            >
+              <span className="sp-insta-icon">
+                <InstagramIcon />
+              </span>
+              <span>Instagram</span>
+            </a>
+          )}
+
+          {/* LinkedIn — only rendered when a URL is provided */}
+          {speaker.linkedin && (
+            <a
+              className="sp-linkedin-btn"
+              href={speaker.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${speaker.name} on LinkedIn`}
+            >
+              <span className="sp-insta-icon">
+                <LinkedInIcon />
+              </span>
+              <span>LinkedIn</span>
+            </a>
+          )}
         </div>
       </div>
     </article>

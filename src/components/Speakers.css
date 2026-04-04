@@ -148,7 +148,6 @@
   flex-shrink: 0;
   overflow: hidden;
   background: var(--sp-surface);
-  /* Decorative corner frame */
 }
 
 /* Thin gold corner accents */
@@ -298,11 +297,13 @@
 .sp-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.sp-insta-btn {
+/* Shared base for both social buttons */
+.sp-insta-btn,
+.sp-linkedin-btn {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -310,7 +311,6 @@
   font-size: 9px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: rgba(245, 240, 232, 0.55);
   text-decoration: none;
   border: 1px solid rgba(201, 169, 110, 0.2);
   padding: 10px 18px 10px 14px;
@@ -318,10 +318,26 @@
   font-weight: 500;
 }
 
+/* Instagram — gold accent on hover */
+.sp-insta-btn {
+  color: rgba(245, 240, 232, 0.55);
+}
+
 .sp-insta-btn:hover {
   color: var(--sp-white);
   border-color: var(--sp-gold);
   background: rgba(201, 169, 110, 0.06);
+}
+
+/* LinkedIn — blue accent on hover */
+.sp-linkedin-btn {
+  color: rgba(245, 240, 232, 0.55);
+}
+
+.sp-linkedin-btn:hover {
+  color: var(--sp-white);
+  border-color: rgba(10, 102, 194, 0.6);
+  background: rgba(10, 102, 194, 0.08);
 }
 
 .sp-insta-icon {
