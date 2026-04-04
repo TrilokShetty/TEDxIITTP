@@ -188,8 +188,6 @@
   object-fit: cover;
   object-position: top center;
   display: block;
-  filter: grayscale(40%) brightness(0.78);
-  /* No hover brightness change, as requested */
 }
 
 /* "Revealing soon" photo slot */

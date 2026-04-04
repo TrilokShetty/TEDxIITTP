@@ -16,6 +16,7 @@ import "./Speakers.css";
 
 import kajal from "../assets/speakers/Kajal_Singh.jpeg";
 import vivek from "../assets/speakers/vivek_atray.jpeg";
+import joshiba from "../assets/speakers/Joshiba.jpeg";
 
 
 const SPEAKERS = [
@@ -39,12 +40,12 @@ const SPEAKERS = [
   },
   {
     id: 3,
-    revealed: false,
-    name: "Dr. Dhruv Chauhan",
-    tag: "Physician · Medical Rights Advocate",
-    instagram: "https://www.instagram.com/placeholder/",
-    bio: "Dr. Dhruv Chauhan, a 27-year-old physician, worked with Delhi State Cancer Institute and serves as National Coordinator of the Indian Medical Association and founder of the Legal Cell for All India Doctors. A prominent voice amid India's higher-education exam controversies, he collaborates with peers to seek accountability and reform, providing assurance and advocacy for young medical aspirants navigating a turbulent system.",
-    img: null,
+    revealed: true,
+    name: "Ms. Joshiba Dev",
+    tag: "Legal Education · Financial Literacy · Legal Awareness",
+    instagram: "https://www.instagram.com/legallyfitjoshiba/",
+    bio: "Joshiba Dev is a legal educator and founder of Legally Fit, a platform dedicated to making legal and financial literacy accessible to all. Through her digital content, she simplifies complex legal concepts and empowers individuals to understand their rights and responsibilities. Her work focuses on bridging the gap between law and everyday life.",
+    img: joshiba,
   },
   {
     id: 4,
