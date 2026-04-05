@@ -19,6 +19,7 @@ import kajal from "../assets/speakers/Kajal_Singh.jpeg";
 import vivek from "../assets/speakers/vivek_atray.jpeg";
 import joshiba from "../assets/speakers/Joshiba.jpeg";
 import srikant from "../assets/speakers/Srikant.jpeg";
+import sanjana from "../assets/speakers/sanjana.jpeg";
 
 
 const SPEAKERS = [
@@ -64,13 +65,13 @@ const SPEAKERS = [
   },
   {
     id: 5,
-    revealed: false,
-    name: "Mr. Piyush Somani",
-    tag: "Entrepreneur · Founder, ESDS Software",
-    instagram: "https://www.instagram.com/placeholder/",
+    revealed: true,
+    name: "Ms. Sanjana Sarathy",
+    tag: "Acting · Entrepreneurship · Content Creation",
+    instagram: "https://www.instagram.com/sanjana.sarathy/",
     linkedin: null,
-    bio: "A visionary and born leader, Mr. Piyush Somani founded ESDS Software Solution at 23 with a mission to build an organisation where respect for the company always transcends self-interest. With a workforce of nearly 1,000+ employees across domestic and international offices, he personally connects with each team member. A first-generation entrepreneur featured in Forbes, The Economic Times, Times of India, and Business Insider.",
-    img: null,
+    bio: "An actor who began her journey in Tamil cinema, Sanjana gained wider recognition for her role in Mismatched. She is steadily carving her space across industries, working toward becoming a pan-India actor and creator. Known for her expressive screen presence, she brings honesty and depth to her characters while continuously evolving in her craft. Beyond acting, she is also exploring content creation and entrepreneurship, while using her platform to contribute to meaningful causes.",
+    img: sanjana,
   },
   {
     id: 6,
