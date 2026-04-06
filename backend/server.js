@@ -2,28 +2,34 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import crypto from "crypto";
-import Razorpay from "razorpay";
 import mongoose from "mongoose";
 import Payment from "./models/Payment.js";
 
 // ── ENV ──────────────────────────────────────────────────────────────────────
 const {
-  RAZORPAY_KEY_ID,
-  RAZORPAY_KEY_SECRET,
+  INSTAMOJO_API_KEY,
+  INSTAMOJO_AUTH_TOKEN,
+  INSTAMOJO_SALT,                          // used to verify webhook MAC
+  INSTAMOJO_BASE_URL = "https://www.instamojo.com/api/1.1",
+  APP_BASE_URL,                            // e.g. https://tedx.iittp.ac.in
   MONGODB_URI = "mongodb://127.0.0.1:27017/tedx_payments",
   PORT = 5000,
 } = process.env;
 
-if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
-  console.error("❌  Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET in .env");
+if (!INSTAMOJO_API_KEY || !INSTAMOJO_AUTH_TOKEN || !INSTAMOJO_SALT || !APP_BASE_URL) {
+  console.error(
+    "❌  Missing one or more required env vars: " +
+    "INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN, INSTAMOJO_SALT, APP_BASE_URL"
+  );
   process.exit(1);
 }
 
-// ── RAZORPAY INSTANCE ────────────────────────────────────────────────────────
-const razorpay = new Razorpay({
-  key_id: RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET,
-});
+// ── INSTAMOJO HEADERS ────────────────────────────────────────────────────────
+const instamojoHeaders = {
+  "X-Api-Key": INSTAMOJO_API_KEY,
+  "X-Auth-Token": INSTAMOJO_AUTH_TOKEN,
+  "Content-Type": "application/x-www-form-urlencoded",
+};
 
 // ── EXPRESS ──────────────────────────────────────────────────────────────────
 const app = express();
@@ -32,52 +38,76 @@ app.use(cors({
     "https://tedx.iittp.ac.in",
     "http://localhost:5173",
     "http://localhost:3000",
-    "http://10.21.24.253:5173"
+    "http://10.21.24.253:5173",
   ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true,
 }));
 app.use(express.json());
+// Needed to parse Instamojo webhook POST bodies (sent as form-encoded)
+app.use(express.urlencoded({ extended: true }));
 
 // ── SERVER-SIDE PRICE MAP (prevents amount tampering) ────────────────────────
 const PASS_PRICES = {
-  regular: 399,
-  premium: 599,
+  regular: 10,
+  premium: 549,
 };
 
 // ── ROUTES ───────────────────────────────────────────────────────────────────
 
 /**
- * POST /api/create-order
- * Body: { amount, passId, passLabel, name, email, phone }
- * Returns: { orderId, amount, currency, keyId }
+ * POST /api/create-payment-link
+ * Body: { passId, passLabel, name, email, phone }
+ * Returns: { paymentUrl }
+ *
+ * Replaces the old /api/create-order + Razorpay order flow.
+ * Calls the Instamojo Payment Requests API and returns the hosted checkout URL.
  */
-app.post("/api/create-order", async (req, res) => {
+app.post("/api/create-payment-link", async (req, res) => {
   try {
     const { passId, passLabel, name, email, phone } = req.body;
 
-    // Basic validation
     if (!passId || !passLabel || !name || !email || !phone) {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Server-side price lookup (ignore client-sent amount)
     const amount = PASS_PRICES[passId];
     if (!amount) {
       return res.status(400).json({ error: "Invalid pass type." });
     }
 
-    // Create Razorpay order (amount in paise)
-    const order = await razorpay.orders.create({
-      amount: Math.round(amount * 100),
-      currency: "INR",
-      receipt: `tedx_${passId}_${Date.now()}`,
-      notes: { passId, passLabel, name, email, phone },
+    // Build form body for Instamojo
+    const params = new URLSearchParams({
+      purpose: `TEDxIITTirupati 2026 — ${passLabel}`,
+      amount: String(amount),
+      buyer_name: name,
+      email,
+      phone,
+      redirect_url: `${APP_BASE_URL}/ticket-confirmed`,   // fallback redirect
+      webhook: `${APP_BASE_URL}/api/instamojo-webhook`,   // async confirmation
+      send_email: "true",
+      send_sms: "true",
+      allow_repeated_payments: "false",
     });
 
-    // Persist pending payment
+    const imRes = await fetch(`${INSTAMOJO_BASE_URL}/payment-requests/`, {
+      method: "POST",
+      headers: instamojoHeaders,
+      body: params,
+    });
+
+    const imData = await imRes.json();
+
+    if (!imRes.ok || !imData.success) {
+      console.error("Instamojo create error:", imData);
+      return res.status(502).json({ error: "Failed to create payment link." });
+    }
+
+    const { id: paymentRequestId, longurl: paymentUrl } = imData.payment_request;
+
+    // Persist a pending record keyed on the Instamojo payment request ID
     await Payment.create({
-      orderId: order.id,
+      paymentRequestId,
       amount,
       passId,
       passLabel,
@@ -87,58 +117,61 @@ app.post("/api/create-order", async (req, res) => {
       status: "pending",
     });
 
-    return res.json({
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: RAZORPAY_KEY_ID,
-    });
+    return res.json({ paymentUrl });
   } catch (err) {
-    console.error("create-order error:", err);
-    return res.status(500).json({ error: "Failed to create order." });
+    console.error("create-payment-link error:", err);
+    return res.status(500).json({ error: "Internal server error." });
   }
 });
 
 /**
- * POST /api/verify-payment
- * Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature }
- * Returns: { verified: true/false }
+ * POST /api/instamojo-webhook
+ * Instamojo POSTs here after every payment attempt (success or failure).
+ * Verifies the MAC before updating the DB.
+ *
+ * Instamojo MAC algorithm:
+ *   HMAC-SHA1(SALT, "payment_id|status|payment_request_id")  →  compare with `mac`
  */
-app.post("/api/verify-payment", async (req, res) => {
+app.post("/api/instamojo-webhook", async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-      req.body;
+    const {
+      payment_id,
+      payment_request_id,
+      status,        // "Credit" = success, anything else = failure
+      mac,
+    } = req.body;
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return res.status(400).json({ error: "Missing payment details." });
+    if (!payment_id || !payment_request_id || !status || !mac) {
+      return res.status(400).send("Missing webhook fields.");
     }
 
-    // HMAC SHA256 verification
-    const expectedSignature = crypto
-      .createHmac("sha256", RAZORPAY_KEY_SECRET)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    // ── MAC verification ─────────────────────────────────────────────────────
+    const message = `${payment_id}|${status}|${payment_request_id}`;
+    const expectedMac = crypto
+      .createHmac("sha1", INSTAMOJO_SALT)
+      .update(message)
       .digest("hex");
 
-    const isValid = expectedSignature === razorpay_signature;
+    if (expectedMac !== mac) {
+      console.warn("⚠️  Instamojo webhook MAC mismatch — possible spoofing attempt");
+      return res.status(400).send("MAC verification failed.");
+    }
 
-    // Update payment record
+    // ── Update payment record ─────────────────────────────────────────────────
+    const isPaid = status === "Credit";
     await Payment.findOneAndUpdate(
-      { orderId: razorpay_order_id },
+      { paymentRequestId: payment_request_id },
       {
-        paymentId: razorpay_payment_id,
-        signature: razorpay_signature,
-        status: isValid ? "paid" : "failed",
+        paymentId: payment_id,
+        status: isPaid ? "paid" : "failed",
       }
     );
 
-    if (!isValid) {
-      return res.status(400).json({ verified: false, error: "Invalid signature." });
-    }
-
-    return res.json({ verified: true });
+    console.log(`✅  Webhook: ${payment_id} → ${isPaid ? "paid" : "failed"}`);
+    return res.status(200).send("OK");
   } catch (err) {
-    console.error("verify-payment error:", err);
-    return res.status(500).json({ error: "Verification failed." });
+    console.error("webhook error:", err);
+    return res.status(500).send("Internal server error.");
   }
 });
 

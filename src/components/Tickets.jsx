@@ -36,12 +36,12 @@ const PASSES = [
   },
 ];
 
-// ── RAZORPAY SCRIPT LOADER ───────────────────────────────────────────────────
-function loadRazorpay() {
+// ── INSTAMOJO SCRIPT LOADER ──────────────────────────────────────────────────
+function loadInstamojo() {
   return new Promise((resolve) => {
-    if (window.Razorpay) return resolve(true);
+    if (window.Instamojo) return resolve(true);
     const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.src = "https://js.instamojo.com/v1/checkout.js";
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
@@ -49,7 +49,6 @@ function loadRazorpay() {
 }
 
 // ── ANIMATED PRICE DIGIT ──────────────────────────────────────────────────────
-// Renders a single digit that continuously cycles through 0-9 with a slot-machine roll.
 function AnimatedDigit({ targetDigit, revealed, delay = 0 }) {
   const [displayDigit, setDisplayDigit] = useState(Math.floor(Math.random() * 10));
   const [locked, setLocked] = useState(false);
@@ -58,7 +57,6 @@ function AnimatedDigit({ targetDigit, revealed, delay = 0 }) {
 
   useEffect(() => {
     if (revealed) {
-      // Lock in to real digit after a staggered delay
       timeoutRef.current = setTimeout(() => {
         clearInterval(intervalRef.current);
         setDisplayDigit(targetDigit);
@@ -70,10 +68,8 @@ function AnimatedDigit({ targetDigit, revealed, delay = 0 }) {
       };
     }
 
-    // Continuous random cycling — speed varies for organic feel
     const tick = () => {
       setDisplayDigit(Math.floor(Math.random() * 10));
-      // Reschedule with slight variance so digits don't sync up
       intervalRef.current = setTimeout(tick, 300 + Math.random() * 200);
     };
     intervalRef.current = setTimeout(tick, Math.random() * 400);
@@ -95,36 +91,24 @@ function AnimatedPrice({ price }) {
   const digits = String(price).split("").map(Number);
 
   if (BOOKING_ENABLED) {
-    // Revealed: show actual price with a brief lock-in animation
     return (
       <div className="pass-price">
         <span className="pass-currency">₹</span>
         <span className="pass-amount pass-amount--revealed">
           {digits.map((d, i) => (
-            <AnimatedDigit
-              key={i}
-              targetDigit={d}
-              revealed={true}
-              delay={i * 120}
-            />
+            <AnimatedDigit key={i} targetDigit={d} revealed={true} delay={i * 120} />
           ))}
         </span>
       </div>
     );
   }
 
-  // Hidden: continuously rolling digits
   return (
     <div className="pass-price">
       <span className="pass-currency pass-currency--hidden">₹</span>
       <span className="pass-amount">
         {digits.map((_, i) => (
-          <AnimatedDigit
-            key={i}
-            targetDigit={0}
-            revealed={false}
-            delay={0}
-          />
+          <AnimatedDigit key={i} targetDigit={0} revealed={false} delay={0} />
         ))}
       </span>
       <span className="price-mystery-label" aria-label="Price revealed at booking">
@@ -274,7 +258,8 @@ function PassCard({ pass, selected, onSelect, onBook }) {
         )}
       </button>
 
-      <p className="pass-note">Powered by Razorpay · Secure checkout</p>
+      {/* Updated branding */}
+      <p className="pass-note">Powered by Instamojo · Secure checkout</p>
     </div>
   );
 }
@@ -305,14 +290,17 @@ export default function Tickets() {
     setPaying(true);
 
     try {
-      const scriptLoaded = await loadRazorpay();
+      // 1. Load the Instamojo checkout script
+      const scriptLoaded = await loadInstamojo();
       if (!scriptLoaded) {
         showToast("Failed to load payment gateway. Please check your connection.");
         setPaying(false);
         return;
       }
 
-      const orderRes = await fetch(`/api/create-order`, {
+      // 2. Ask your backend to create an Instamojo payment link for this buyer
+      //    Your server should call the Instamojo API and return { paymentUrl }
+      const linkRes = await fetch(`/api/create-payment-link`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -325,61 +313,39 @@ export default function Tickets() {
         }),
       });
 
-      if (!orderRes.ok) {
-        const errData = await orderRes.json().catch(() => ({}));
-        throw new Error(errData.error || "Order creation failed.");
+      if (!linkRes.ok) {
+        const errData = await linkRes.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to create payment link.");
       }
 
-      const { orderId, keyId } = await orderRes.json();
+      const { paymentUrl } = await linkRes.json();
 
-      const options = {
-        key: keyId,
-        order_id: orderId,
-        name: "TEDxIITTirupati",
-        description: `${pass.label} — Lexicon of the Awakening`,
-        image: "/image.png",
-        prefill: { name, email, contact: phone },
-        theme: { color: "#eb0028" },
-        modal: {
-          ondismiss: () => {
+      // 3. Wire up Instamojo success/failure handlers before opening
+      window.Instamojo.configure({
+        handlers: {
+          onOpen: () => {
+            // Checkout modal is now visible — nothing extra needed
+          },
+          onClose: () => {
+            // User dismissed without paying
             setPaying(false);
             showToast("Payment was cancelled. You can try again anytime.", "warning");
           },
-        },
-        handler: async function (response) {
-          try {
-            const verifyRes = await fetch(`/api/verify-payment`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-
-            const result = await verifyRes.json();
-
-            if (result.verified) {
-              window.location.href = `/ticket-confirmed?id=${response.razorpay_payment_id}&pass=${pass.id}`;
-            } else {
-              showToast("Payment verification failed. Please contact support.");
-              setPaying(false);
-            }
-          } catch {
-            showToast("Something went wrong during verification. Please contact support.");
+          onSuccess: (response) => {
+            // response contains: paymentId, paymentRequestId, paymentStatus, etc.
+            window.location.href = `/ticket-confirmed?id=${response.paymentId}&pass=${pass.id}`;
+          },
+          onFailure: (response) => {
+            console.error("Instamojo payment failed:", response);
+            showToast("Payment could not be completed. Please try again.");
             setPaying(false);
-          }
+          },
         },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (resp) => {
-        console.error("Payment failed:", resp.error);
-        showToast("Payment could not be completed. Please try again.");
-        setPaying(false);
       });
-      rzp.open();
+
+      // 4. Open the Instamojo checkout form
+      window.Instamojo.open(paymentUrl);
+
     } catch (err) {
       console.error("Checkout error:", err);
       showToast(err.message || "Something went wrong. Please try again.");

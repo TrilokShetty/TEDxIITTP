@@ -20,6 +20,7 @@ import vivek from "../assets/speakers/vivek_atray.jpeg";
 import joshiba from "../assets/speakers/Joshiba.jpeg";
 import srikant from "../assets/speakers/Srikant.jpeg";
 import sanjana from "../assets/speakers/sanjana.jpeg";
+import rajev  from "../assets/speakers/Rajeev.jpeg";
 
 
 const SPEAKERS = [
@@ -75,13 +76,13 @@ const SPEAKERS = [
   },
   {
     id: 6,
-    revealed: false,
-    name: "Mr. Piyush Somani",
-    tag: "Entrepreneur · Founder, ESDS Software",
-    instagram: "https://www.instagram.com/placeholder/",
-    linkedin: null,
-    bio: "A visionary and born leader, Mr. Piyush Somani founded ESDS Software Solution at 23 with a mission to build an organisation where respect for the company always transcends self-interest. With a workforce of nearly 1,000+ employees across domestic and international offices, he personally connects with each team member. A first-generation entrepreneur featured in Forbes, The Economic Times, Times of India, and Business Insider.",
-    img: null,
+    revealed: true,
+    name: "Mr. Rajev B Sharma ",
+    tag: "Global Career Strategist · Academic Mentor · Entrepreneur",
+    instagram: "https://www.instagram.com/rajevb/",
+    linkedin: "https://in.linkedin.com/in/rajevbsharma",
+    bio: "Dr. Rajev B. Sharma is a Global Career Strategist, academic mentor, and entrepreneur with over 20 years of CXO experience across education, finance, and HR. An engineer, MBA, and DLitt, he has mentored thousands of students and young professionals in designing future-ready careers. As the founder of TASA Global and multiple career & education platforms, his work focuses on one powerful idea: Careers are not meant to be chosen once - they are meant to be designed and evolved.",
+    img: rajev,
   },
   // ── PASTE NEW SPEAKERS BELOW THIS COMMENT ────────────────────────────────
   // {
@@ -289,11 +290,11 @@ export default function Speakers() {
         </div>
 
         {/* Bottom ornament */}
-        <div className="sp-footer-ornament">
+        {/* <div className="sp-footer-ornament">
           <div className="sp-footer-line" />
           <span className="sp-footer-text">More announcements on the way</span>
           <div className="sp-footer-line" />
-        </div>
+        </div> */}
       </main>
     </>
   );
