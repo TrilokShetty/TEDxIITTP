@@ -1,0 +1,313 @@
+/* RefundCancellation.css
+   All rules scoped under .rc-page — no global resets,
+   no :root overrides, no duplicate @import.
+   ─────────────────────────────────────────────────────── */
+
+.rc-page {
+  background: #0c0c0c;
+  color: #f0ece4;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  padding-top: 88px;
+  min-height: 100vh;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.rc-header {
+  position: relative;
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--gold-border);
+}
+
+.rc-header__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 85% 65% at 50% 110%, rgba(220, 15, 35, 0.5) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 85% 0%,   rgba(201, 169, 110, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.rc-header__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.rc-eyebrow {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: rc-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
+}
+
+.rc-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3rem, 7.5vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: #f0ece4;
+  opacity: 0;
+  animation: rc-fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.25s forwards;
+}
+
+.rc-title em {
+  font-style: italic;
+  color: var(--gold-bright);
+}
+
+.rc-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  justify-content: center;
+  margin: 1.6rem auto;
+  opacity: 0;
+  animation: rc-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+}
+
+.rc-rule span {
+  width: 52px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold));
+}
+
+.rc-rule span:last-child {
+  background: linear-gradient(to left, transparent, var(--gold));
+}
+
+.rc-rule i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  font-style: normal;
+}
+
+.rc-tagline {
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c8c2b8;
+  opacity: 0;
+  animation: rc-fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.52s forwards;
+}
+
+/* ─── Intro block ────────────────────────────────────────────── */
+.rc-intro-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 4rem 2.5rem 3rem;
+}
+
+.rc-intro {
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 2rem;
+  max-width: 720px;
+}
+
+.rc-intro__text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(240, 236, 228, 0.85);
+  line-height: 1.75;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Sections wrapper ───────────────────────────────────────── */
+.rc-sections {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2.5rem 2rem;
+}
+
+/* ─── Individual section ─────────────────────────────────────── */
+.rc-section {
+  padding: 3.2rem 0;
+}
+
+.rc-section__divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+  margin-bottom: 3.2rem;
+}
+
+.rc-section__inner {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* ─── Chip ───────────────────────────────────────────────────── */
+.rc-chip {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 1.1rem;
+}
+
+/* ─── Section heading ────────────────────────────────────────── */
+.rc-sec-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: #f0ece4;
+}
+
+/* ─── Body text ──────────────────────────────────────────────── */
+.rc-body {
+  font-size: 0.96rem;
+  line-height: 1.9;
+  color: #ddd8d0;
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+}
+
+.rc-body:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Contact CTA ────────────────────────────────────────────── */
+.rc-contact {
+  position: relative;
+  text-align: center;
+  padding: 7rem 2.5rem 8rem;
+  overflow: hidden;
+  border-top: 1px solid var(--gold-border);
+}
+
+.rc-contact__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(220, 15, 35, 0.28) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.rc-contact .rc-chip {
+  position: relative;
+  z-index: 1;
+}
+
+.rc-contact__heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: #f0ece4;
+  margin: 0.8rem 0 1.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rc-contact__heading em {
+  font-style: italic;
+  color: var(--gold-bright);
+}
+
+.rc-contact__body {
+  max-width: 560px;
+  margin: 0 auto 2.4rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.rc-contact__details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rc-contact__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--gold-bright);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.3);
+  padding-bottom: 2px;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.rc-contact__link:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.rc-contact__sep {
+  color: rgba(201, 169, 110, 0.4);
+  font-size: 1.1rem;
+}
+
+.rc-contact__addr {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #c8c2b8;
+  letter-spacing: 0.03em;
+  max-width: 380px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ─── Reveal animation ───────────────────────────────────────── */
+@keyframes rc-fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rc-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.rc-reveal.rc-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rc-reveal-d1 {
+  transition-delay: 0.1s;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .rc-section__inner {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .rc-intro-wrap       { padding: 3rem 1.5rem 2rem; }
+  .rc-sections         { padding: 0 1.5rem 1rem; }
+  .rc-contact          { padding: 5rem 1.5rem 6rem; }
+  .rc-contact__details { flex-direction: column; gap: 1rem; }
+  .rc-contact__sep     { display: none; }
+}

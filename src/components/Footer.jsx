@@ -406,6 +406,7 @@ const Footer = () => {
               {[
                 { label: "Privacy Policy", href: "/privacy-policy" },
                 { label: "Terms & Conditions", href: "/terms-and-conditions" },
+                { label: "Refund Policy", href: "/refund-policy" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link to={l.href}>{l.label}</Link>
