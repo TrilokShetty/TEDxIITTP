@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./Tickets.css";
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-const BOOKING_ENABLED = false;
+const BOOKING_ENABLED = true;
 
 const PASSES = [
   {
@@ -36,12 +36,12 @@ const PASSES = [
   },
 ];
 
-// ── INSTAMOJO SCRIPT LOADER ──────────────────────────────────────────────────
-function loadInstamojo() {
+// ── RAZORPAY SCRIPT LOADER ───────────────────────────────────────────────────
+function loadRazorpay() {
   return new Promise((resolve) => {
-    if (window.Instamojo) return resolve(true);
+    if (window.Razorpay) return resolve(true);
     const script = document.createElement("script");
-    script.src = "https://js.instamojo.com/v1/checkout.js";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
@@ -137,7 +137,10 @@ function UserDetailsModal({ pass, onSubmit, onClose }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [numberOfPasses, setNumberOfPasses] = useState(1);
   const [error, setError] = useState("");
+
+  const totalPrice = pass.price * numberOfPasses;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -156,7 +159,12 @@ function UserDetailsModal({ pass, onSubmit, onClose }) {
       return;
     }
 
-    onSubmit({ name: name.trim(), email: email.trim(), phone: phone.replace(/[\s-]/g, "") });
+    onSubmit({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.replace(/[\s-]/g, ""),
+      numberOfPasses,
+    });
   };
 
   return (
@@ -170,7 +178,10 @@ function UserDetailsModal({ pass, onSubmit, onClose }) {
 
         <h2 className="modal-title">Complete Your Booking</h2>
         <p className="modal-subtitle">
-          {pass.label} — <span className="modal-price">₹{pass.price}</span>
+          {pass.label} — <span className="modal-price">₹{totalPrice}</span>
+          {numberOfPasses > 1 && (
+            <span className="modal-price-breakdown"> ({numberOfPasses} × ₹{pass.price})</span>
+          )}
         </p>
 
         <form className="modal-form" onSubmit={handleSubmit}>
@@ -208,10 +219,24 @@ function UserDetailsModal({ pass, onSubmit, onClose }) {
             />
           </label>
 
+          <label className="modal-label">
+            <span>Number of Passes</span>
+            <select
+              className="modal-input"
+              value={numberOfPasses}
+              onChange={(e) => setNumberOfPasses(parseInt(e.target.value, 10))}
+            >
+              <option value={1}>1 Pass</option>
+              <option value={2}>2 Passes</option>
+              <option value={3}>3 Passes</option>
+              <option value={4}>4 Passes</option>
+            </select>
+          </label>
+
           {error && <p className="modal-error">{error}</p>}
 
           <button type="submit" className="modal-submit">
-            Proceed to Pay &nbsp;→
+            Pay ₹{totalPrice} &nbsp;→
           </button>
         </form>
       </div>
@@ -258,8 +283,7 @@ function PassCard({ pass, selected, onSelect, onBook }) {
         )}
       </button>
 
-      {/* Updated branding */}
-      <p className="pass-note">Powered by Instamojo · Secure checkout</p>
+      <p className="pass-note">Powered by Razorpay · Secure checkout</p>
     </div>
   );
 }
@@ -284,67 +308,114 @@ export default function Tickets() {
 
   const handleBook = (pass) => setModalPass(pass);
 
-  const handleModalSubmit = async ({ name, email, phone }) => {
+  const handleModalSubmit = async ({ name, email, phone, numberOfPasses }) => {
     const pass = modalPass;
     setModalPass(null);
     setPaying(true);
 
     try {
-      // 1. Load the Instamojo checkout script
-      const scriptLoaded = await loadInstamojo();
+      // 1. Load Razorpay script
+      const scriptLoaded = await loadRazorpay();
       if (!scriptLoaded) {
         showToast("Failed to load payment gateway. Please check your connection.");
         setPaying(false);
         return;
       }
 
-      // 2. Ask your backend to create an Instamojo payment link for this buyer
-      //    Your server should call the Instamojo API and return { paymentUrl }
-      const linkRes = await fetch(`/api/create-payment-link`, {
+      // 2. Create order on backend
+      const orderRes = await fetch(`/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: pass.price,
           passId: pass.id,
           passLabel: pass.label,
           name,
           email,
           phone,
+          numberOfPasses,
         }),
       });
 
-      if (!linkRes.ok) {
-        const errData = await linkRes.json().catch(() => ({}));
-        throw new Error(errData.error || "Failed to create payment link.");
+      if (!orderRes.ok) {
+        const errData = await orderRes.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to create order.");
       }
 
-      const { paymentUrl } = await linkRes.json();
+      const { orderId, amount, currency, keyId } = await orderRes.json();
 
-      // 3. Wire up Instamojo success/failure handlers before opening
-      window.Instamojo.configure({
-        handlers: {
-          onOpen: () => {
-            // Checkout modal is now visible — nothing extra needed
-          },
-          onClose: () => {
-            // User dismissed without paying
+      // 3. Open Razorpay checkout
+      const options = {
+        key: keyId,
+        amount,
+        currency,
+        name: "TEDxIITTirupati 2026",
+        description: `${pass.label} × ${numberOfPasses}`,
+        order_id: orderId,
+        prefill: { name, email, contact: phone },
+        theme: { color: "#eb0028" },
+
+        handler: async (response) => {
+          // Payment succeeded — verify on backend
+          try {
+            const verifyRes = await fetch(`/api/verify-payment`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            if (!verifyRes.ok) {
+              throw new Error("Verification failed");
+            }
+
+            const data = await verifyRes.json();
+            window.location.href = `/ticket-confirmed?id=${data.paymentId}&pass=${pass.id}&count=${numberOfPasses}`;
+          } catch {
+            showToast("Payment was received but verification failed. Please contact support.");
+            setPaying(false);
+          }
+        },
+
+        modal: {
+          ondismiss: async () => {
+            // User closed Razorpay modal without paying
             setPaying(false);
             showToast("Payment was cancelled. You can try again anytime.", "warning");
-          },
-          onSuccess: (response) => {
-            // response contains: paymentId, paymentRequestId, paymentStatus, etc.
-            window.location.href = `/ticket-confirmed?id=${response.paymentId}&pass=${pass.id}`;
-          },
-          onFailure: (response) => {
-            console.error("Instamojo payment failed:", response);
-            showToast("Payment could not be completed. Please try again.");
-            setPaying(false);
+            // Restore seats
+            try {
+              await fetch(`/api/payment-failed`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId }),
+              });
+            } catch {
+              // silent — backend will handle stale pending records
+            }
           },
         },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on("payment.failed", async (response) => {
+        console.error("Razorpay payment failed:", response.error);
+        showToast("Payment could not be completed. Please try again.");
+        setPaying(false);
+        try {
+          await fetch(`/api/payment-failed`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId }),
+          });
+        } catch {
+          // silent
+        }
       });
 
-      // 4. Open the Instamojo checkout form
-      window.Instamojo.open(paymentUrl);
+      rzp.open();
 
     } catch (err) {
       console.error("Checkout error:", err);

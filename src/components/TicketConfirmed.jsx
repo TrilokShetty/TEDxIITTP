@@ -8,6 +8,7 @@ export default function TicketConfirmed() {
 
   const paymentId = params.get("id") || "—";
   const passId = params.get("pass") || "unknown";
+  const numberOfPasses = params.get("count") || "1";
 
   const passLabel =
     passId === "premium" ? "Premium Pass" :
@@ -35,12 +36,16 @@ export default function TicketConfirmed() {
 
         <div className="confirmed-details">
           <div className="confirmed-row">
-            <span className="confirmed-label">Payment ID</span>
+            <span className="confirmed-label">Transaction ID</span>
             <span className="confirmed-value">{paymentId}</span>
           </div>
           <div className="confirmed-row">
             <span className="confirmed-label">Pass Type</span>
             <span className="confirmed-value">{passLabel}</span>
+          </div>
+          <div className="confirmed-row">
+            <span className="confirmed-label">Number of Passes</span>
+            <span className="confirmed-value">{numberOfPasses}</span>
           </div>
           <div className="confirmed-row">
             <span className="confirmed-label">Event Date</span>
@@ -49,7 +54,7 @@ export default function TicketConfirmed() {
         </div>
 
         <p className="confirmed-note">
-          A confirmation email will be sent to you shortly. Please save your Payment ID for reference.
+          Please save your Transaction ID for reference.
         </p>
 
         <Link to="/" className="confirmed-cta">

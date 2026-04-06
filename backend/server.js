@@ -1,38 +1,61 @@
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import crypto from "crypto";
-import mongoose from "mongoose";
-import Payment from "./models/Payment.js";
+/**
+ * server.js — TEDxIITTirupati 2026 · Simple Ticketing Backend (Razorpay)
+ *
+ * Flow:
+ *  1. User picks pass type + number of passes (1–4)
+ *  2. Backend creates Razorpay order, decrements pendingSeats, saves pending Payment
+ *  3. Frontend opens Razorpay checkout
+ *  4. On success: frontend calls /api/verify-payment → status set to "paid"
+ *  5. On failure: seats are restored
+ */
 
-// ── ENV ──────────────────────────────────────────────────────────────────────
+import "dotenv/config";
+import express  from "express";
+import cors     from "cors";
+import crypto   from "crypto";
+import mongoose from "mongoose";
+import Razorpay from "razorpay";
+
+import Payment   from "./models/Payment.js";
+import SeatCount from "./models/SeatCount.js";
+
+// ── ENV ────────────────────────────────────────────────────────────────────
 const {
-  INSTAMOJO_API_KEY,
-  INSTAMOJO_AUTH_TOKEN,
-  INSTAMOJO_SALT,                          // used to verify webhook MAC
-  INSTAMOJO_BASE_URL = "https://www.instamojo.com/api/1.1",
-  APP_BASE_URL,                            // e.g. https://tedx.iittp.ac.in
+  RAZORPAY_KEY_ID,
+  RAZORPAY_KEY_SECRET,
   MONGODB_URI = "mongodb://127.0.0.1:27017/tedx_payments",
-  PORT = 5000,
+  PORT        = 5000,
+  ADMIN_SECRET,
 } = process.env;
 
-if (!INSTAMOJO_API_KEY || !INSTAMOJO_AUTH_TOKEN || !INSTAMOJO_SALT || !APP_BASE_URL) {
-  console.error(
-    "❌  Missing one or more required env vars: " +
-    "INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN, INSTAMOJO_SALT, APP_BASE_URL"
-  );
+// ── Initial seat counts per pass type (only used on first run) ─────────────
+const INITIAL_SEATS = {
+  regular: 120,
+  premium: 40,
+};
+
+const REQUIRED_VARS = ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "ADMIN_SECRET"];
+const missingVars = REQUIRED_VARS.filter((v) => !process.env[v]);
+if (missingVars.length) {
+  console.error("❌  Missing required env vars:", missingVars.join(", "));
   process.exit(1);
 }
 
-// ── INSTAMOJO HEADERS ────────────────────────────────────────────────────────
-const instamojoHeaders = {
-  "X-Api-Key": INSTAMOJO_API_KEY,
-  "X-Auth-Token": INSTAMOJO_AUTH_TOKEN,
-  "Content-Type": "application/x-www-form-urlencoded",
+// ── Razorpay instance ──────────────────────────────────────────────────────
+const razorpay = new Razorpay({
+  key_id:     RAZORPAY_KEY_ID,
+  key_secret: RAZORPAY_KEY_SECRET,
+});
+
+// ── Server-side price map ──────────────────────────────────────────────────
+const PASS_PRICES = {
+  regular: 349,
+  premium: 549,
 };
 
-// ── EXPRESS ──────────────────────────────────────────────────────────────────
+// ── Express setup ──────────────────────────────────────────────────────────
 const app = express();
+
 app.use(cors({
   origin: [
     "https://tedx.iittp.ac.in",
@@ -40,149 +63,275 @@ app.use(cors({
     "http://localhost:3000",
     "http://10.21.24.253:5173",
   ],
-  methods: ["GET", "POST", "OPTIONS"],
+  methods:     ["GET", "POST", "PUT", "OPTIONS"],
   credentials: true,
 }));
+
 app.use(express.json());
-// Needed to parse Instamojo webhook POST bodies (sent as form-encoded)
-app.use(express.urlencoded({ extended: true }));
 
-// ── SERVER-SIDE PRICE MAP (prevents amount tampering) ────────────────────────
-const PASS_PRICES = {
-  regular: 10,
-  premium: 549,
-};
-
-// ── ROUTES ───────────────────────────────────────────────────────────────────
-
-/**
- * POST /api/create-payment-link
- * Body: { passId, passLabel, name, email, phone }
- * Returns: { paymentUrl }
- *
- * Replaces the old /api/create-order + Razorpay order flow.
- * Calls the Instamojo Payment Requests API and returns the hosted checkout URL.
- */
-app.post("/api/create-payment-link", async (req, res) => {
+// ═══════════════════════════════════════════════════════════════════════════
+//  POST /api/create-order
+//
+//  Creates a Razorpay order, decrements seats, saves a pending Payment.
+// ═══════════════════════════════════════════════════════════════════════════
+app.post("/api/create-order", async (req, res) => {
   try {
-    const { passId, passLabel, name, email, phone } = req.body;
+    const { passId, passLabel, name, email, phone, numberOfPasses } = req.body;
 
-    if (!passId || !passLabel || !name || !email || !phone) {
+    // ── Validate ────────────────────────────────────────────────────────
+    if (!passId || !passLabel || !name?.trim() || !email?.trim() || !phone?.trim()) {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    const amount = PASS_PRICES[passId];
-    if (!amount) {
+    if (!PASS_PRICES[passId]) {
       return res.status(400).json({ error: "Invalid pass type." });
     }
 
-    // Build form body for Instamojo
-    const params = new URLSearchParams({
-      purpose: `TEDxIITTirupati 2026 — ${passLabel}`,
-      amount: String(amount),
-      buyer_name: name,
-      email,
-      phone,
-      redirect_url: `${APP_BASE_URL}/ticket-confirmed`,   // fallback redirect
-      webhook: `${APP_BASE_URL}/api/instamojo-webhook`,   // async confirmation
-      send_email: "true",
-      send_sms: "true",
-      allow_repeated_payments: "false",
-    });
-
-    const imRes = await fetch(`${INSTAMOJO_BASE_URL}/payment-requests/`, {
-      method: "POST",
-      headers: instamojoHeaders,
-      body: params,
-    });
-
-    const imData = await imRes.json();
-
-    if (!imRes.ok || !imData.success) {
-      console.error("Instamojo create error:", imData);
-      return res.status(502).json({ error: "Failed to create payment link." });
+    const passes = parseInt(numberOfPasses, 10);
+    if (!passes || passes < 1 || passes > 4) {
+      return res.status(400).json({ error: "Number of passes must be between 1 and 4." });
     }
 
-    const { id: paymentRequestId, longurl: paymentUrl } = imData.payment_request;
-
-    // Persist a pending record keyed on the Instamojo payment request ID
-    await Payment.create({
-      paymentRequestId,
-      amount,
-      passId,
-      passLabel,
-      name,
-      email,
-      phone,
-      status: "pending",
-    });
-
-    return res.json({ paymentUrl });
-  } catch (err) {
-    console.error("create-payment-link error:", err);
-    return res.status(500).json({ error: "Internal server error." });
-  }
-});
-
-/**
- * POST /api/instamojo-webhook
- * Instamojo POSTs here after every payment attempt (success or failure).
- * Verifies the MAC before updating the DB.
- *
- * Instamojo MAC algorithm:
- *   HMAC-SHA1(SALT, "payment_id|status|payment_request_id")  →  compare with `mac`
- */
-app.post("/api/instamojo-webhook", async (req, res) => {
-  try {
-    const {
-      payment_id,
-      payment_request_id,
-      status,        // "Credit" = success, anything else = failure
-      mac,
-    } = req.body;
-
-    if (!payment_id || !payment_request_id || !status || !mac) {
-      return res.status(400).send("Missing webhook fields.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return res.status(400).json({ error: "Please enter a valid email address." });
     }
 
-    // ── MAC verification ─────────────────────────────────────────────────────
-    const message = `${payment_id}|${status}|${payment_request_id}`;
-    const expectedMac = crypto
-      .createHmac("sha1", INSTAMOJO_SALT)
-      .update(message)
-      .digest("hex");
-
-    if (expectedMac !== mac) {
-      console.warn("⚠️  Instamojo webhook MAC mismatch — possible spoofing attempt");
-      return res.status(400).send("MAC verification failed.");
+    if (!/^\d{10}$/.test(phone.replace(/[\s\-()]/g, ""))) {
+      return res.status(400).json({ error: "Please enter a valid 10-digit phone number." });
     }
 
-    // ── Update payment record ─────────────────────────────────────────────────
-    const isPaid = status === "Credit";
-    await Payment.findOneAndUpdate(
-      { paymentRequestId: payment_request_id },
-      {
-        paymentId: payment_id,
-        status: isPaid ? "paid" : "failed",
-      }
+    const cleanName  = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPhone = phone.replace(/[\s\-()]/g, "");
+    const amount     = PASS_PRICES[passId] * passes; // total in INR
+
+    // ── Check & decrement seats for this pass type atomically ────────────
+    const seatDoc = await SeatCount.findOneAndUpdate(
+      { _id: passId, pendingSeats: { $gte: passes } },
+      { $inc: { pendingSeats: -passes } },
+      { new: true }
     );
 
-    console.log(`✅  Webhook: ${payment_id} → ${isPaid ? "paid" : "failed"}`);
-    return res.status(200).send("OK");
+    if (!seatDoc) {
+      return res.status(410).json({ error: `Sorry, not enough ${passLabel} seats available.` });
+    }
+
+    // ── Create Razorpay order + save Payment ───────────────────────────
+    // If either fails, restore the decremented seats.
+    let order;
+    try {
+      order = await razorpay.orders.create({
+        amount:   amount * 100, // Razorpay expects paise
+        currency: "INR",
+        receipt:  `tedx_${Date.now()}`,
+        notes: {
+          name:  cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          passId,
+          passLabel,
+          numberOfPasses: String(passes),
+        },
+      });
+
+      await Payment.create({
+        orderId:        order.id,
+        amount,
+        passId,
+        passLabel,
+        numberOfPasses: passes,
+        name:           cleanName,
+        email:          cleanEmail,
+        phone:          cleanPhone,
+        status:         "pending",
+      });
+    } catch (innerErr) {
+      // Restore seats since order/payment creation failed
+      await SeatCount.findOneAndUpdate(
+        { _id: passId },
+        { $inc: { pendingSeats: passes } }
+      );
+      console.error("create-order error (seats restored):", innerErr);
+      return res.status(500).json({ error: "Something went wrong. Please try again." });
+    }
+
+    return res.json({
+      orderId:   order.id,
+      amount:    amount * 100, // paise for frontend
+      currency:  "INR",
+      keyId:     RAZORPAY_KEY_ID,
+    });
+
   } catch (err) {
-    console.error("webhook error:", err);
-    return res.status(500).send("Internal server error.");
+    console.error("create-order error:", err);
+    return res.status(500).json({ error: "Something went wrong. Please try again." });
   }
 });
 
-// ── START ────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+//  POST /api/verify-payment
+//
+//  Called by frontend after Razorpay checkout succeeds.
+//  Verifies the signature, updates Payment status to "paid".
+// ═══════════════════════════════════════════════════════════════════════════
+app.post("/api/verify-payment", async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: "Missing payment details." });
+    }
+
+    // ── Verify signature ───────────────────────────────────────────────
+    const expectedSig = crypto
+      .createHmac("sha256", RAZORPAY_KEY_SECRET)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
+
+    if (expectedSig !== razorpay_signature) {
+      return res.status(400).json({ error: "Payment verification failed." });
+    }
+
+    // ── Update payment record ──────────────────────────────────────────
+    const payment = await Payment.findOneAndUpdate(
+      { orderId: razorpay_order_id, status: "pending" },
+      { status: "paid", paymentId: razorpay_payment_id },
+      { new: true }
+    );
+
+    if (!payment) {
+      return res.status(404).json({ error: "Payment record not found." });
+    }
+
+    console.log(`✅  Payment verified: ${razorpay_payment_id} — ${payment.numberOfPasses} pass(es) for "${payment.name}"`);
+
+    return res.json({
+      success: true,
+      paymentId: razorpay_payment_id,
+      passLabel: payment.passLabel,
+      numberOfPasses: payment.numberOfPasses,
+    });
+
+  } catch (err) {
+    console.error("verify-payment error:", err);
+    return res.status(500).json({ error: "Verification failed. Please contact support." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  POST /api/payment-failed
+//
+//  Called by frontend when Razorpay payment fails/is dismissed.
+//  Restores seats and marks record as failed.
+// ═══════════════════════════════════════════════════════════════════════════
+app.post("/api/payment-failed", async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ error: "Missing orderId." });
+    }
+
+    const payment = await Payment.findOneAndUpdate(
+      { orderId, status: "pending" },
+      { status: "failed" },
+      { new: true }
+    );
+
+    if (payment) {
+      // Restore seats for this pass type
+      await SeatCount.findOneAndUpdate(
+        { _id: payment.passId },
+        { $inc: { pendingSeats: payment.numberOfPasses } }
+      );
+      console.log(`❌  Payment failed for "${payment.name}" — ${payment.numberOfPasses} ${payment.passId} seat(s) restored`);
+    }
+
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error("payment-failed error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  GET /api/seats — public, returns available seats per pass type
+// ═══════════════════════════════════════════════════════════════════════════
+app.get("/api/seats", async (_req, res) => {
+  try {
+    const docs = await SeatCount.find({});
+    const result = {};
+    for (const doc of docs) {
+      result[doc._id] = doc.pendingSeats;
+    }
+    return res.json(result);
+  } catch (err) {
+    console.error("seats fetch error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  PUT /api/admin/seats — update seat count for a specific pass type
+//  Body: { adminSecret, passId, pendingSeats }
+//  Example: { adminSecret: "xxx", passId: "premium", pendingSeats: 60 }
+// ═══════════════════════════════════════════════════════════════════════════
+app.put("/api/admin/seats", async (req, res) => {
+  try {
+    const { adminSecret, passId, pendingSeats } = req.body;
+
+    if (adminSecret !== ADMIN_SECRET) {
+      return res.status(403).json({ error: "Forbidden." });
+    }
+
+    if (!passId || !PASS_PRICES[passId]) {
+      return res.status(400).json({ error: "Invalid passId. Use 'regular' or 'premium'." });
+    }
+
+    const newCount = parseInt(pendingSeats, 10);
+    if (isNaN(newCount) || newCount < 0) {
+      return res.status(400).json({ error: "pendingSeats must be a non-negative integer." });
+    }
+
+    const updated = await SeatCount.findOneAndUpdate(
+      { _id: passId },
+      { pendingSeats: newCount },
+      { new: true }
+    );
+
+    console.log(`🔧  Admin: ${passId} pendingSeats updated to ${newCount}`);
+    return res.json({ passId, pendingSeats: updated.pendingSeats });
+
+  } catch (err) {
+    console.error("Admin seats update error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  STARTUP
+// ═══════════════════════════════════════════════════════════════════════════
 mongoose
   .connect(MONGODB_URI)
-  .then(() => {
+  .then(async () => {
     console.log("✅  MongoDB connected");
-    app.listen(PORT, () => console.log(`🚀  Server running on port ${PORT}`));
+
+    // Seed initial seat counts per pass type (only if not already set)
+    for (const [passId, seats] of Object.entries(INITIAL_SEATS)) {
+      await SeatCount.findOneAndUpdate(
+        { _id: passId },
+        { $setOnInsert: { pendingSeats: seats } },
+        { upsert: true }
+      );
+    }
+    console.log("✅  Seat counts seeded (existing values preserved)");
+
+    app.listen(PORT, () => {
+      console.log(`🚀  Server running on port ${PORT}`);
+    });
   })
   .catch((err) => {
-    console.error("❌  MongoDB connection error:", err.message);
+    console.error("❌  MongoDB connection failed:", err.message);
     process.exit(1);
   });
