@@ -50,7 +50,7 @@ const razorpay = new Razorpay({
 
 // ── Server-side price map ──────────────────────────────────────────────────
 const PASS_PRICES = {
-  regular: 349,
+  regular: 1,
   premium: 549,
 };
 
