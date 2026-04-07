@@ -106,12 +106,8 @@ app.post("/api/create-order", async (req, res) => {
     const cleanPhone = phone.replace(/[\s\-()]/g, "");
     const amount     = PASS_PRICES[passId] * passes; // total in INR
 
-    // ── Check & decrement seats for this pass type atomically ────────────
-    const seatDoc = await SeatCount.findOneAndUpdate(
-      { _id: passId, pendingSeats: { $gte: passes } },
-      { $inc: { pendingSeats: -passes } },
-      { new: true }
-    );
+    // ── Check seat availability (do not block/reserve seats yet) ─────────
+    const seatDoc = await SeatCount.findOne({ _id: passId, pendingSeats: { $gte: passes } });
 
     if (!seatDoc) {
       return res.status(410).json({ error: `Sorry, not enough ${passLabel} seats available.` });
@@ -147,12 +143,7 @@ app.post("/api/create-order", async (req, res) => {
         status:         "pending",
       });
     } catch (innerErr) {
-      // Restore seats since order/payment creation failed
-      await SeatCount.findOneAndUpdate(
-        { _id: passId },
-        { $inc: { pendingSeats: passes } }
-      );
-      console.error("create-order error (seats restored):", innerErr);
+      console.error("create-order error:", innerErr);
       return res.status(500).json({ error: "Something went wrong. Please try again." });
     }
 
@@ -201,8 +192,14 @@ app.post("/api/verify-payment", async (req, res) => {
     );
 
     if (!payment) {
-      return res.status(404).json({ error: "Payment record not found." });
+      return res.status(404).json({ error: "Payment record not found or already verified." });
     }
+
+    // ── Deduct seats now that payment is confirmed ─────────────────────
+    await SeatCount.findOneAndUpdate(
+      { _id: payment.passId },
+      { $inc: { pendingSeats: -payment.numberOfPasses } }
+    );
 
     console.log(`✅  Payment verified: ${razorpay_payment_id} — ${payment.numberOfPasses} pass(es) for "${payment.name}"`);
 
@@ -247,12 +244,7 @@ app.post("/api/payment-failed", async (req, res) => {
     );
 
     if (payment) {
-      // Restore seats for this pass type
-      await SeatCount.findOneAndUpdate(
-        { _id: payment.passId },
-        { $inc: { pendingSeats: payment.numberOfPasses } }
-      );
-      console.log(`❌  Payment failed for "${payment.name}" — ${payment.numberOfPasses} ${payment.passId} seat(s) restored`);
+      console.log(`❌  Payment failed or cancelled for "${payment.name}"`);
     }
 
     return res.json({ success: true });
