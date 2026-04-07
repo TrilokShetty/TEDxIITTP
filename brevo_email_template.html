@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* CSS specifically optimized for standard email clients */
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background-color: #0d0d0d;
+      color: #f0ece4;
+      margin: 0;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .ticket-wrapper {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: #0d0d0d;
+    }
+
+    .ticket {
+      background-color: #0f0d0b;
+      border: 2px dashed #c9a96e; /* Gold dashed border like an event ticket */
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ticket-header {
+      background-color: #1a1a1a;
+      border-bottom: 2px dashed rgba(201, 169, 110, 0.4);
+      padding: 36px 20px 30px;
+      text-align: center;
+    }
+
+    .ticket-logo {
+      max-width: 220px;
+      height: auto;
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ticket-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.7);
+    }
+
+    .ticket-body {
+      padding: 40px 36px;
+    }
+
+    .greeting {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: #c9a96e;
+      margin-bottom: 24px;
+    }
+
+    .ticket-details {
+      display: block;
+      margin-bottom: 30px;
+      border-left: 3px solid #eb0028; /* TED Red */
+      padding-left: 24px;
+    }
+
+    .detail-group {
+      margin-bottom: 24px;
+    }
+    .detail-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.5);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .detail-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #f0ece4;
+      letter-spacing: 0.05em;
+    }
+    
+    .pass-type {
+      color: #eb0028; /* Highlight the pass type in TED Red */
+    }
+
+    .ticket-footer {
+      background-color: #111111;
+      border-top: 2px dashed rgba(201, 169, 110, 0.4);
+      padding: 30px 36px;
+      text-align: center;
+    }
+
+    .notice {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(245, 240, 232, 0.6);
+    }
+
+    .contact {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: rgba(245, 240, 232, 0.7);
+    }
+    
+    .contact a {
+      color: #c9a96e;
+      text-decoration: none;
+      border-bottom: 1px solid #c9a96e;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="ticket-wrapper">
+    <div class="ticket">
+      
+      <!-- Top Section -->
+      <div class="ticket-header">
+        <!-- Uses absolute path for logo for email rendering -->
+        <img src="https://res.cloudinary.com/dd1g028yx/image/upload/v1775578501/logo-white77_fqqxj6.png" alt="TEDxIITTP" class="ticket-logo" />
+        <div class="ticket-title">Official Event Pass</div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="ticket-body">
+        <!-- New greeting that uses params.name -->
+        <div class="greeting">Hello {{params.name}},</div>
+        <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; line-height: 1.8; color: rgba(245, 240, 232, 0.85); font-weight: 300; margin-bottom: 36px;">
+          Your payment has been successfully verified. Here are your official booking details for the event. Please keep this email safe as proof of purchase.
+        </p>
+        
+        <!-- Ticket Stub Info -->
+        <div class="ticket-details">
+          <div class="detail-group">
+            <span class="detail-label">Pass Type</span>
+            <span class="detail-value pass-type">{{params.pass_type}}</span>
+          </div>
+
+          <div class="detail-group">
+            <span class="detail-label">Number of Passes</span>
+            <span class="detail-value">{{params.number_of_passes}}</span>
+          </div>
+
+          <div class="detail-group">
+            <span class="detail-label">Payment ID / Receipt</span>
+            <span class="detail-value" style="font-size: 16px; font-weight: 400;">{{params.payment_id}}</span>
+          </div>
+        </div>
+
+        <!-- QR Code Box -->
+        <div class="qr-box" style="text-align: center; margin-top: 40px; border-top: 1px dashed rgba(201, 169, 110, 0.3); padding-top: 36px;">
+          <img src="https://quickchart.io/qr?text={{params.payment_id}}&light=0f0d0b&dark=c9a96e&margin=1&size=200" alt="Ticket QR Code" style="display: block; margin: 0 auto; width: 180px; height: 180px; border: 2px solid #1a1a1a; border-radius: 8px;" />
+          <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(245,240,232,0.4); margin-top: 18px;">Scan at Entrance</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="ticket-footer">
+        <div class="notice">
+          Present this ticket email along with a valid ID at the venue registration desk.<br>
+          We're thrilled to have you join us for a day of ideas worth spreading.
+        </div>
+        <div class="contact">
+          For any questions, please contact the organisers at <br><br>
+          <a href="mailto:ted@iittp.ac.in">ted@iittp.ac.in</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

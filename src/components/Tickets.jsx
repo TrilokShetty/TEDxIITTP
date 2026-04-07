@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./Tickets.css";
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-const BOOKING_ENABLED = false;
+const BOOKING_ENABLED = true;
 
 const PASSES = [
   {

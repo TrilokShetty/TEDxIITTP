@@ -18,6 +18,7 @@ import Razorpay from "razorpay";
 
 import Payment   from "./models/Payment.js";
 import SeatCount from "./models/SeatCount.js";
+import { sendConfirmationEmail } from "./services/emailService.js";
 
 // ── ENV ────────────────────────────────────────────────────────────────────
 const {
@@ -204,6 +205,13 @@ app.post("/api/verify-payment", async (req, res) => {
     }
 
     console.log(`✅  Payment verified: ${razorpay_payment_id} — ${payment.numberOfPasses} pass(es) for "${payment.name}"`);
+
+    // ── Send Confirmation Email ────────────────────────────────────────
+    try {
+      await sendConfirmationEmail(payment);
+    } catch (emailErr) {
+      console.error("⚠️ Email sending failed, but booking was successful:", emailErr.message);
+    }
 
     return res.json({
       success: true,
