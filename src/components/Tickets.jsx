@@ -8,7 +8,7 @@ const PASSES = [
   {
     id: "regular",
     label: "Regular Pass",
-    price: 349,
+    price: 299,
     tagline: "Your gateway to ideas worth spreading.",
     perks: [
       "Access to all 6 TEDx Talks",
@@ -22,7 +22,7 @@ const PASSES = [
   {
     id: "premium",
     label: "Premium Pass",
-    price: 549,
+    price: 499,
     tagline: "Immerse deeper. Engage fully. Remember forever.",
     perks: [
       "Access to all 6 TEDx Talks",
