@@ -26,9 +26,9 @@ const PASSES = [
     tagline: "Immerse deeper. Engage fully. Remember forever.",
     perks: [
       "Access to all 6 TEDx Talks",
-      "Priority Seating - reserved front rows",
+      "Front Row Seating",
       "Exclusive TEDxIIT Tirupati Goodies",
-      "Brand Kit: Exclusive Bag, Official ID Card, Notepad, Pen, Badge, Keychain, Canvas Pouch, Bookmark & Sticker",
+      "Brand Kit: Exclusive Bag, Notepad, Pen, Badge, Official ID Card",
       "Refreshments & Snacks",
       "An Unforgettable TEDx Experience",
     ],
