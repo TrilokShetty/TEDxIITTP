@@ -11,7 +11,7 @@ const Timer = () => {
 
   useEffect(() => {
     // Event Date: April 12, 2026
-    const targetDate = new Date("2026-04-12T00:00:00").getTime();
+    const targetDate = new Date("2026-04-12T10:00:00").getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -35,7 +35,10 @@ const Timer = () => {
 
   return (
     <div className="timer-wrapper">
-      <p className="timer-announcement">April 12, 2026</p>
+      <div className="timer-announcement">
+        <div className="timer-date">April 12, 2026</div>
+        <div className="timer-time">10:00 AM - 12:30 PM</div>
+      </div>
       
       <div className="timer-boxes">
         <div className="timer-box">
