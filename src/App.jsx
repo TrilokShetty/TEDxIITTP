@@ -43,6 +43,7 @@ const INTRO_SESSION_KEY = "introPlayed";
 const AnimatedSections = () => {
   const initialShowIntro = useMemo(() => {
     if (typeof window === "undefined") return true;
+    if (window.location.pathname === "/paid-tickets") return false;
     return window.sessionStorage.getItem(INTRO_SESSION_KEY) !== "1";
   }, []);
 
