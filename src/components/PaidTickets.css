@@ -135,6 +135,35 @@
   text-align: center;
 }
 
+.pt-actions {
+  text-align: right;
+}
+
+.pt-btn-resend {
+  background: transparent;
+  color: #ff2a2a;
+  border: 1px solid rgba(255, 42, 42, 0.4);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.pt-btn-resend:hover:not(:disabled) {
+  background: rgba(255, 42, 42, 0.1);
+  border-color: #ff2a2a;
+}
+
+.pt-btn-resend:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #888;
+  border-color: #444;
+}
+
 .pt-mono {
   font-family: monospace;
   color: #aaaaaa;

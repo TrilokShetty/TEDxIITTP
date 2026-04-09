@@ -258,6 +258,28 @@ app.post("/api/payment-failed", async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+//  POST /api/admin/resend-email
+//  Retriggers the confirmation email for a given payment
+// ═══════════════════════════════════════════════════════════════════════════
+app.post("/api/admin/resend-email", async (req, res) => {
+  try {
+    const { paymentId } = req.body;
+    if (!paymentId) return res.status(400).json({ error: "Missing paymentId." });
+
+    const payment = await Payment.findOne({ paymentId, status: "paid" });
+    if (!payment) return res.status(404).json({ error: "Paid record not found." });
+
+    await sendConfirmationEmail(payment);
+    console.log(`✉️  Retriggered email for ${payment.email} (${paymentId})`);
+    
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("resend-email error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 //  GET /api/admin/paid-tickets
 //  Returns list of all paid tickets and a summary of passes sold.
 //  Publicly accessible via a secret link.

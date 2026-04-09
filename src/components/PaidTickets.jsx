@@ -5,6 +5,24 @@ const PaidTickets = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [resending, setResending] = useState(null);
+
+  const handleResendEmail = async (paymentId) => {
+    setResending(paymentId);
+    try {
+      const res = await fetch("/api/admin/resend-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId }),
+      });
+      if (!res.ok) throw new Error("Failed to resend");
+      alert(`Email resent successfully to ${paymentId}!`);
+    } catch(err) {
+      alert("Error resending email.");
+    } finally {
+      setResending(null);
+    }
+  };
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -59,6 +77,7 @@ const PaidTickets = () => {
                 <th>Passes</th>
                 <th>Amount</th>
                 <th>Payment ID</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -73,6 +92,15 @@ const PaidTickets = () => {
                     <td className="pt-center">{t.numberOfPasses}</td>
                     <td>₹{t.amount}</td>
                     <td className="pt-mono">{t.paymentId}</td>
+                    <td className="pt-actions">
+                      <button 
+                        onClick={() => handleResendEmail(t.paymentId)} 
+                        className="pt-btn-resend"
+                        disabled={resending === t.paymentId}
+                      >
+                        {resending === t.paymentId ? "Sending..." : "Resend"}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
