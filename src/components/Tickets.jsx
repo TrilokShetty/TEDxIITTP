@@ -6,6 +6,18 @@ const BOOKING_ENABLED = true;
 
 const PASSES = [
   {
+    id: "access",
+    label: "Access Pass",
+    price: 149,
+    tagline: "Step into the awakening.",
+    perks: [
+      "Access to all 6 TEDx Talks",
+      "An Unforgettable TEDx Experience",
+      "Refreshments & Snacks",
+    ],
+    highlighted: false,
+  },
+  {
     id: "regular",
     label: "Regular Pass",
     price: 299,
@@ -34,6 +46,7 @@ const PASSES = [
     ],
     highlighted: true,
   },
+  
 ];
 
 // ── RAZORPAY SCRIPT LOADER ───────────────────────────────────────────────────

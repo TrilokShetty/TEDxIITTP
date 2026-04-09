@@ -12,7 +12,8 @@ export default function TicketConfirmed() {
 
   const passLabel =
     passId === "premium" ? "Premium Pass" :
-    passId === "regular" ? "Regular Pass" : passId;
+    passId === "regular" ? "Regular Pass" :
+    passId === "access" ? "Access Pass" : passId;
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 60);

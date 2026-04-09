@@ -31,7 +31,8 @@ const {
 
 // ── Initial seat counts per pass type (only used on first run) ─────────────
 const INITIAL_SEATS = {
-  regular: 120,
+  regular: 55,
+  access: 95,
   premium: 40,
 };
 
@@ -51,6 +52,7 @@ const razorpay = new Razorpay({
 // ── Server-side price map ──────────────────────────────────────────────────
 const PASS_PRICES = {
   regular: 299,
+  access: 149,
   premium: 499,
 };
 
@@ -335,7 +337,7 @@ app.put("/api/admin/seats", async (req, res) => {
     }
 
     if (!passId || !PASS_PRICES[passId]) {
-      return res.status(400).json({ error: "Invalid passId. Use 'regular' or 'premium'." });
+      return res.status(400).json({ error: "Invalid passId. Use 'regular', 'access', or 'premium'." });
     }
 
     const newCount = parseInt(pendingSeats, 10);
