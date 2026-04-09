@@ -256,6 +256,55 @@ app.post("/api/payment-failed", async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+//  GET /api/admin/paid-tickets
+//  Returns list of all paid tickets and a summary of passes sold.
+//  Publicly accessible via a secret link.
+// ═══════════════════════════════════════════════════════════════════════════
+app.get("/api/admin/paid-tickets", async (req, res) => {
+  try {
+    const paidPayments = await Payment.find({ status: "paid" }).sort({ createdAt: -1 });
+
+    const summary = {
+      totalPassesSold: 0,
+      totalRevenue: 0,
+      byPassType: {}
+    };
+
+    const tickets = paidPayments.map((t) => {
+      summary.totalPassesSold += t.numberOfPasses;
+      summary.totalRevenue += t.amount;
+      
+      if (!summary.byPassType[t.passId]) {
+        summary.byPassType[t.passId] = {
+          label: t.passLabel,
+          passesSold: 0,
+          revenue: 0,
+        };
+      }
+      summary.byPassType[t.passId].passesSold += t.numberOfPasses;
+      summary.byPassType[t.passId].revenue += t.amount;
+
+      return {
+        name: t.name,
+        email: t.email,
+        phone: t.phone,
+        numberOfPasses: t.numberOfPasses,
+        paymentId: t.paymentId,
+        passId: t.passId,
+        passLabel: t.passLabel,
+        amount: t.amount,
+        createdAt: t.createdAt,
+      };
+    });
+
+    return res.json({ summary, tickets });
+  } catch (err) {
+    console.error("paid-tickets fetch error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 //  GET /api/seats — public, returns available seats per pass type
 // ═══════════════════════════════════════════════════════════════════════════
 app.get("/api/seats", async (_req, res) => {

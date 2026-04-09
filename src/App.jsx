@@ -19,6 +19,7 @@ import TicketConfirmed from "./components/TicketConfirmed";
 import Sponsors from "./components/Sponsors";
 import Speakers from "./components/Speakers";
 import Refund from "./components/Refund";
+import PaidTickets from "./components/PaidTickets";
 
 import "./App.css";
 
@@ -77,6 +78,7 @@ const AnimatedSections = () => {
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/speakers" element={<Speakers />} />
             <Route path="/refund-policy" element={<Refund />} />
+            <Route path="/paid-tickets" element={<PaidTickets />} />
           </Routes>
 
           {/* Footer always visible */}
