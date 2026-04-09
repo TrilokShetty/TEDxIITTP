@@ -277,16 +277,20 @@ const Hero = () => {
 
   return (
     <section
+      className="hero-section"
       style={{
         position: "relative",
         width: "100vw",
         height: "100vh",
+        minHeight: "100dvh",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         background: "#050503",
+        paddingTop: "var(--nav-height, 88px)",
+        boxSizing: "border-box",
       }}
     >
       <style>{`
@@ -349,13 +353,13 @@ const Hero = () => {
 
       {/* ── Main content ── */}
       <div
+        className="hero-content"
         style={{
           position: "relative",
           zIndex: 3,
           textAlign: "center",
           padding: "0 24px",
           maxWidth: "900px",
-          marginTop: "64px", /* Restored to prevent pushing everything down too far */
           opacity: ready ? 1 : 0,
           transition: "opacity 0.3s",
         }}
@@ -370,7 +374,7 @@ const Hero = () => {
             marginBottom: "6px" /* Reduced spacing between presents and Lexicon to pull the whole block closer */
           }}
         >
-          <img src={logo} alt="TEDxIITTirupati" style={{ height: "72px", display: "block", marginBottom: "8px", objectFit: "contain" }} />
+          <img src={logo} alt="TEDxIITTirupati" className="hero-logo-img" style={{ display: "block", marginBottom: "8px", objectFit: "contain" }} />
           <div style={{
             fontFamily: "'Jost', sans-serif",
             fontWeight: 400,
@@ -424,7 +428,7 @@ const Hero = () => {
             alignItems: "center",
             justifyContent: "center",
             gap: "16px",
-            marginBottom: "28px",
+            marginBottom: "18px",
           }}
         >
           <div style={{ width: "40px", height: "1px", background: "var(--gold-border)" }} />
@@ -442,7 +446,7 @@ const Hero = () => {
             letterSpacing: "3.5px",
             color: "rgba(255,255,255,0.4)",
             textTransform: "uppercase",
-            margin: "0 0 52px",
+            margin: "0 0 32px",
           }}
         >
           Ideas Worth Spreading

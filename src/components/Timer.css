@@ -17,17 +17,16 @@
 .timer-date {
   font-size: clamp(18px, 2.5vw, 24px);
   color: var(--gold);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 3px;
   margin-bottom: 6px;
-  text-transform: uppercase;
 }
 
 .timer-time {
-  font-size: clamp(14px, 1.8vw, 18px);
-  color: #f0ece4;
+  font-size: clamp(13px, 1.6vw, 16px);
+  color: rgba(240, 236, 228, 0.65);
   font-weight: 300;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
 }
 
 .timer-boxes {
