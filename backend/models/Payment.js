@@ -23,6 +23,9 @@ const paymentSchema = new mongoose.Schema(
       enum: ["pending", "paid", "failed"],
       default: "pending",
     },
+
+    // Entry tracking
+    entry: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -280,6 +280,50 @@ app.post("/api/admin/resend-email", async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+//  POST /api/admin/mark-entry
+//  Scans a paymentId (from QR), marks entry=true, returns ticket details.
+//  Prevents double-entry.
+// ═══════════════════════════════════════════════════════════════════════════
+app.post("/api/admin/mark-entry", async (req, res) => {
+  try {
+    const { paymentId } = req.body;
+    if (!paymentId) {
+      return res.status(400).json({ error: "Missing paymentId." });
+    }
+
+    const payment = await Payment.findOne({ paymentId, status: "paid" });
+    if (!payment) {
+      return res.status(404).json({ error: "No paid ticket found for this ID." });
+    }
+
+    const ticket = {
+      name: payment.name,
+      email: payment.email,
+      phone: payment.phone,
+      passId: payment.passId,
+      passLabel: payment.passLabel,
+      numberOfPasses: payment.numberOfPasses,
+      amount: payment.amount,
+      paymentId: payment.paymentId,
+      createdAt: payment.createdAt,
+    };
+
+    if (payment.entry) {
+      return res.json({ alreadyEntered: true, ticket });
+    }
+
+    payment.entry = true;
+    await payment.save();
+    console.log(`🚪  Entry marked for "${payment.name}" (${paymentId})`);
+
+    return res.json({ alreadyEntered: false, ticket });
+  } catch (err) {
+    console.error("mark-entry error:", err);
+    return res.status(500).json({ error: "Internal error." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 //  GET /api/admin/paid-tickets
 //  Returns list of all paid tickets and a summary of passes sold.
 //  Publicly accessible via a secret link.
@@ -317,6 +361,7 @@ app.get("/api/admin/paid-tickets", async (req, res) => {
         passId: t.passId,
         passLabel: t.passLabel,
         amount: t.amount,
+        entry: t.entry || false,
         createdAt: t.createdAt,
       };
     });

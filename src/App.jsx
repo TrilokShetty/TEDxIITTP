@@ -20,6 +20,7 @@ import Sponsors from "./components/Sponsors";
 import Speakers from "./components/Speakers";
 import Refund from "./components/Refund";
 import PaidTickets from "./components/PaidTickets";
+import EntryDesk from "./components/EntryDesk";
 
 import "./App.css";
 
@@ -43,7 +44,7 @@ const INTRO_SESSION_KEY = "introPlayed";
 const AnimatedSections = () => {
   const initialShowIntro = useMemo(() => {
     if (typeof window === "undefined") return true;
-    if (window.location.pathname === "/paid-tickets") return false;
+    if (window.location.pathname === "/paid-tickets" || window.location.pathname === "/entry-desk") return false;
     return window.sessionStorage.getItem(INTRO_SESSION_KEY) !== "1";
   }, []);
 
@@ -80,6 +81,7 @@ const AnimatedSections = () => {
             <Route path="/speakers" element={<Speakers />} />
             <Route path="/refund-policy" element={<Refund />} />
             <Route path="/paid-tickets" element={<PaidTickets />} />
+            <Route path="/entry-desk" element={<EntryDesk />} />
           </Routes>
 
           {/* Footer always visible */}
